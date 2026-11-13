@@ -36,6 +36,11 @@ export const GLOBE = {
   /** Markers this close to the edge of the visible half of the globe are hidden. */
   HORIZON_MARGIN: 0.05,
   HALF: 0.5,
+  ATMOSPHERE_RADIUS: 1.18,
+  STAR_COUNT: 1400,
+  STAR_DISTANCE: 30,
+  STAR_SIZE: 1.6,
+  STAR_OPACITY: 0.55,
 } as const;
 
 /** CSS custom properties the globe reads its colours from, so it follows the theme. */
@@ -45,9 +50,36 @@ export const GLOBE_COLOR_TOKEN = {
   GRATICULE: '--map-graticule',
   HIGHLIGHT: '--map-highlight',
   HIGHLIGHT_BORDER: '--map-highlight-border',
+  ATMOSPHERE: '--map-atmosphere',
+  STAR: '--map-star',
 } as const;
 
 /** The HTML layer over the canvas. Its children are pinned to the globe on every frame. */
 export const GLOBE_OVERLAY_ELEMENT_ID = 'globe-marker-overlay';
 export const HIDDEN_VISIBILITY = 'hidden';
 export const VISIBLE_VISIBILITY = 'visible';
+
+/** A soft glow around the globe: brightest at the rim, fading towards the centre. */
+export const ATMOSPHERE_VERTEX_SHADER = `
+  varying vec3 surfaceNormal;
+  void main() {
+    surfaceNormal = normalize(normalMatrix * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+export const ATMOSPHERE_FRAGMENT_SHADER = `
+  uniform vec3 glowColor;
+  varying vec3 surfaceNormal;
+  void main() {
+    float intensity = pow(0.7 - dot(surfaceNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+    gl_FragColor = vec4(glowColor, 1.0) * intensity;
+  }
+`;
+
+/** Constants of the hash that scatters the background stars the same way on every visit. */
+export const STAR_HASH = {
+  FREQUENCY_FIRST: 12.9898,
+  FREQUENCY_SECOND: 78.233,
+  AMPLITUDE: 43758.5453,
+} as const;

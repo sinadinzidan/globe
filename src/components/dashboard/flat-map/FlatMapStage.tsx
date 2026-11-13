@@ -2,8 +2,7 @@ import { geoPath } from 'd3-geo';
 import { useMemo } from 'react';
 import { FlatMapLand } from '@/components/dashboard/flat-map/FlatMapLand';
 import { FlatMapOverlay } from '@/components/dashboard/flat-map/FlatMapOverlay';
-import { MapControls } from '@/components/dashboard/MapControls';
-import { PlantDetails } from '@/components/dashboard/PlantDetails';
+import { MapHud } from '@/components/dashboard/MapHud';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
 import { FLAT_MAP } from '@/constants/dashboard/flat-map/flatMapConstants';
 import { MapFocus } from '@/enums/dashboard/mapFocus';
@@ -97,8 +96,7 @@ export const FlatMapStage = ({ mapData }: FlatMapStageProperties) => {
           </g>
         </svg>
       )}
-      <MapControls onZoomIn={zoomIn} onZoomOut={zoomOut} />
-      <PlantDetails />
+      <MapHud onZoomIn={zoomIn} onZoomOut={zoomOut} />
     </div>
   );
 };

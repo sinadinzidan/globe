@@ -90,24 +90,24 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.15 0.012 250);
+  --foreground: oklch(0.97 0.005 250);
+  --card: oklch(0.2 0.015 250);
+  --card-foreground: oklch(0.97 0.005 250);
+  --popover: oklch(0.22 0.016 250);
+  --popover-foreground: oklch(0.97 0.005 250);
+  --primary: oklch(0.82 0.13 195);
+  --primary-foreground: oklch(0.2 0.04 220);
+  --secondary: oklch(0.27 0.016 250);
+  --secondary-foreground: oklch(0.97 0.005 250);
+  --muted: oklch(0.26 0.015 250);
+  --muted-foreground: oklch(0.72 0.015 250);
+  --accent: oklch(0.28 0.018 250);
+  --accent-foreground: oklch(0.97 0.005 250);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.82 0.13 195);
   --chart-1: #c98500;
   --chart-2: #3987e5;
   --chart-3: #d55181;
@@ -119,14 +119,30 @@
   --map-graticule: oklch(0.3 0.015 250);
   --map-highlight: oklch(0.36 0.02 250);
   --map-highlight-border: oklch(0.92 0.01 250);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --map-atmosphere: oklch(0.7 0.12 215);
+  --map-star: oklch(0.85 0.01 250);
+  --sidebar: oklch(0.2 0.015 250);
+  --sidebar-foreground: oklch(0.97 0.005 250);
+  --sidebar-primary: oklch(0.82 0.13 195);
+  --sidebar-primary-foreground: oklch(0.2 0.04 220);
+  --sidebar-accent: oklch(0.28 0.018 250);
+  --sidebar-accent-foreground: oklch(0.97 0.005 250);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.82 0.13 195);
+}
+
+/* A floating surface over the map: translucent, blurred and lifted. */
+@utility hud-panel {
+  @apply rounded-xl border bg-card/80 shadow-lg backdrop-blur-md;
+}
+
+@keyframes tour-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 @layer base {

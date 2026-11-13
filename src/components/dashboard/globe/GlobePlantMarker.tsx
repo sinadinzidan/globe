@@ -9,10 +9,18 @@ interface GlobePlantMarkerProperties {
   plant: Plant;
   index: number;
   isSelected: boolean;
+  isTarget: boolean;
 }
 
-export const GlobePlantMarker = ({ plant, index, isSelected }: GlobePlantMarkerProperties) => {
-  const { dispatch } = usePlantDashboard();
+export const GlobePlantMarker = ({
+  plant,
+  index,
+  isSelected,
+  isTarget,
+}: GlobePlantMarkerProperties) => {
+  const { state, dispatch } = usePlantDashboard();
+
+  const isDiscovered = state.discoveredPlantIds.includes(plant.id);
 
   const handleClick = () => {
     dispatch(
@@ -36,7 +44,12 @@ export const GlobePlantMarker = ({ plant, index, isSelected }: GlobePlantMarkerP
         style={{ animationDelay: `${String(index * MARKER_STAGGER_MILLISECONDS)}ms` }}
         className="size-10 animate-in overflow-visible duration-500 fill-mode-both fade-in zoom-in-0"
       >
-        <PlantMarkerGlyph sector={plant.sector} isSelected={isSelected} />
+        <PlantMarkerGlyph
+          sector={plant.sector}
+          isSelected={isSelected}
+          isDiscovered={isDiscovered}
+          isTarget={isTarget}
+        />
       </svg>
       <span
         className={cn(

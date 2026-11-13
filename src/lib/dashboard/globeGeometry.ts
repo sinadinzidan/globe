@@ -1,6 +1,6 @@
 import type { MultiLineString, Position } from 'geojson';
 import { BufferAttribute, BufferGeometry, MathUtils, ShapeUtils, Vector2, Vector3 } from 'three';
-import { GLOBE } from '@/constants/dashboard/globe/globeConstants';
+import { GLOBE, STAR_HASH } from '@/constants/dashboard/globe/globeConstants';
 import { ANTIMERIDIAN_LONGITUDE, POLAR_CAP_LATITUDE } from '@/constants/dashboard/mapConstants';
 import type { AreaFeature, GeographicPoint } from '@/types/dashboard/mapTypes';
 
@@ -91,3 +91,24 @@ export const buildFillGeometry = (area: AreaFeature<unknown>, radius: number) =>
 export const longitudeDifference = (from: number, to: number) =>
   MathUtils.euclideanModulo(to - from + GLOBE.HALF_TURN_DEGREES, GLOBE.FULL_TURN_DEGREES) -
   GLOBE.HALF_TURN_DEGREES;
+
+const hash = (seed: number) => {
+  const value = Math.sin(seed) * STAR_HASH.AMPLITUDE;
+  return value - Math.floor(value);
+};
+
+/** Background stars, scattered evenly over a distant sphere in a fixed pseudo-random pattern. */
+export const buildStarGeometry = () => {
+  const positions: number[] = [];
+  for (let index = 1; index <= GLOBE.STAR_COUNT; index += 1) {
+    const longitude = hash(index * STAR_HASH.FREQUENCY_FIRST) * GLOBE.FULL_TURN_DEGREES;
+    const latitude = MathUtils.radToDeg(
+      Math.asin(hash(index * STAR_HASH.FREQUENCY_SECOND) * (1 + 1) - 1),
+    );
+    positions.push(...toCartesian({ longitude, latitude }, GLOBE.STAR_DISTANCE).toArray());
+  }
+  return new BufferGeometry().setAttribute(
+    POSITION_ATTRIBUTE,
+    new BufferAttribute(new Float32Array(positions), GLOBE.POSITION_COMPONENTS),
+  );
+};

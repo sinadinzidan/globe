@@ -35,6 +35,8 @@ export const useGlobeColors = () =>
       graticule: resolveToken(GLOBE_COLOR_TOKEN.GRATICULE),
       highlight: resolveToken(GLOBE_COLOR_TOKEN.HIGHLIGHT),
       highlightBorder: resolveToken(GLOBE_COLOR_TOKEN.HIGHLIGHT_BORDER),
+      atmosphere: resolveToken(GLOBE_COLOR_TOKEN.ATMOSPHERE),
+      star: resolveToken(GLOBE_COLOR_TOKEN.STAR),
     }),
     [],
   );

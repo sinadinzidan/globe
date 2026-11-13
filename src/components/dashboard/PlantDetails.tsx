@@ -1,5 +1,6 @@
-import { X } from 'lucide-react';
+import { CircleCheck, X } from 'lucide-react';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
+import { DISCOVERY_EXPERIENCE, EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import {
   COORDINATE_FRACTION_DIGITS,
   EMIRATE_LABEL,
@@ -19,7 +21,7 @@ import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { useVisiblePlants } from '@/hooks/dashboard/useVisiblePlants';
 
-/** Details of the selected plant, shown over the bottom corner of the map. */
+/** Details of the selected plant, shown over the top corner of the map. */
 export const PlantDetails = () => {
   const { dispatch } = usePlantDashboard();
   const { selectedPlant } = useVisiblePlants();
@@ -42,7 +44,8 @@ export const PlantDetails = () => {
   return (
     <Card
       size="sm"
-      className="absolute inset-x-4 bottom-4 animate-in fade-in slide-in-from-bottom-2 sm:right-auto sm:w-96"
+      key={selectedPlant.id}
+      className="absolute top-4 right-16 left-4 animate-in bg-card/85 backdrop-blur-md fade-in slide-in-from-top-2 sm:right-auto sm:w-96"
     >
       <CardHeader>
         <CardTitle>{selectedPlant.name}</CardTitle>
@@ -62,6 +65,10 @@ export const PlantDetails = () => {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
+        <Badge variant="outline" className="self-start border-primary/40 text-primary">
+          <CircleCheck aria-hidden="true" />
+          {EXPLORER_COPY.DISCOVERED_BADGE} · +{DISCOVERY_EXPERIENCE} {EXPLORER_COPY.EXPERIENCE_UNIT}
+        </Badge>
         <p className="text-sm text-muted-foreground">{selectedPlant.description}</p>
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
           {details.map((detail) => (

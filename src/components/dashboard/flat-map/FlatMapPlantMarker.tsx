@@ -14,6 +14,7 @@ interface FlatMapPlantMarkerProperties {
   plant: Plant;
   index: number;
   isSelected: boolean;
+  isTarget: boolean;
   transform: string;
 }
 
@@ -21,9 +22,12 @@ export const FlatMapPlantMarker = ({
   plant,
   index,
   isSelected,
+  isTarget,
   transform,
 }: FlatMapPlantMarkerProperties) => {
-  const { dispatch } = usePlantDashboard();
+  const { state, dispatch } = usePlantDashboard();
+
+  const isDiscovered = state.discoveredPlantIds.includes(plant.id);
 
   const handleSelect = () => {
     dispatch(
@@ -59,7 +63,12 @@ export const FlatMapPlantMarker = ({
           style={{ animationDelay: `${String(index * MARKER_STAGGER_MILLISECONDS)}ms` }}
           className="origin-center animate-in duration-500 fill-mode-both fade-in zoom-in-0 [transform-box:fill-box]"
         >
-          <PlantMarkerGlyph sector={plant.sector} isSelected={isSelected} />
+          <PlantMarkerGlyph
+            sector={plant.sector}
+            isSelected={isSelected}
+            isDiscovered={isDiscovered}
+            isTarget={isTarget}
+          />
         </g>
         <text
           y={-MARKER.LABEL_OFFSET}

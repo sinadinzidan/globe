@@ -1,12 +1,13 @@
-import { lazy, Suspense, useState } from 'react';
-import { MapControls } from '@/components/dashboard/MapControls';
-import { PlantDetails } from '@/components/dashboard/PlantDetails';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { MapHud } from '@/components/dashboard/MapHud';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
 import { GLOBE } from '@/constants/dashboard/globe/globeConstants';
+import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { useIntroduction } from '@/hooks/dashboard/useIntroduction';
 import { useMapData } from '@/hooks/dashboard/useMapData';
+import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import type { ZoomCommand } from '@/types/dashboard/globe/globeTypes';
 
 // The 3D renderer is large, so it is only downloaded when the globe is opened.
@@ -16,6 +17,7 @@ const INITIAL_ZOOM_COMMAND: ZoomCommand = { factor: 1, sequence: 0 };
 
 export const GlobeView = () => {
   const { data: mapData, isPending, isError, refetch } = useMapData();
+  const { dispatch } = usePlantDashboard();
 
   const [zoomCommand, setZoomCommand] = useState(INITIAL_ZOOM_COMMAND);
 
@@ -37,6 +39,10 @@ export const GlobeView = () => {
 
   useIntroduction(Boolean(mapData));
 
+  useEffect(() => {
+    dispatch({ type: DashboardActionType.MARK_GLOBE_OPENED });
+  }, [dispatch]);
+
   if (isPending) {
     return <LoadingState message={DASHBOARD_COPY.LOADING_MAP} />;
   }
@@ -48,8 +54,7 @@ export const GlobeView = () => {
       <Suspense fallback={<LoadingState message={DASHBOARD_COPY.LOADING_MAP} />}>
         <GlobeScene mapData={mapData} zoomCommand={zoomCommand} />
       </Suspense>
-      <MapControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
-      <PlantDetails />
+      <MapHud onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
     </div>
   );
 };

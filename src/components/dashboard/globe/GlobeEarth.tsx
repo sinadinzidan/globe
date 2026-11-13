@@ -1,9 +1,18 @@
 import { geoGraticule10 } from 'd3-geo';
 import { useMemo } from 'react';
-import { DoubleSide } from 'three';
-import { GLOBE } from '@/constants/dashboard/globe/globeConstants';
+import { AdditiveBlending, BackSide, DoubleSide } from 'three';
+import {
+  ATMOSPHERE_FRAGMENT_SHADER,
+  ATMOSPHERE_VERTEX_SHADER,
+  GLOBE,
+} from '@/constants/dashboard/globe/globeConstants';
 import { useGlobeColors } from '@/hooks/dashboard/globe/useGlobeColors';
-import { buildFillGeometry, buildLineGeometry, ringsOf } from '@/lib/dashboard/globeGeometry';
+import {
+  buildFillGeometry,
+  buildLineGeometry,
+  buildStarGeometry,
+  ringsOf,
+} from '@/lib/dashboard/globeGeometry';
 import type { MapData } from '@/types/dashboard/mapTypes';
 
 interface GlobeEarthProperties {
@@ -15,6 +24,11 @@ interface GlobeEarthProperties {
 export const GlobeEarth = ({ mapData, isRegionVisible }: GlobeEarthProperties) => {
   const colors = useGlobeColors();
 
+  const stars = useMemo(() => buildStarGeometry(), []);
+  const atmosphereUniforms = useMemo(
+    () => ({ glowColor: { value: colors.atmosphere } }),
+    [colors.atmosphere],
+  );
   const graticule = useMemo(
     () => buildLineGeometry(geoGraticule10().coordinates, GLOBE.GRATICULE_RADIUS),
     [],
@@ -39,6 +53,29 @@ export const GlobeEarth = ({ mapData, isRegionVisible }: GlobeEarthProperties) =
 
   return (
     <>
+      <points geometry={stars}>
+        <pointsMaterial
+          color={colors.star}
+          size={GLOBE.STAR_SIZE}
+          sizeAttenuation={false}
+          transparent
+          opacity={GLOBE.STAR_OPACITY}
+        />
+      </points>
+      <mesh>
+        <sphereGeometry
+          args={[GLOBE.ATMOSPHERE_RADIUS, GLOBE.SPHERE_SEGMENTS, GLOBE.SPHERE_SEGMENTS]}
+        />
+        <shaderMaterial
+          uniforms={atmosphereUniforms}
+          vertexShader={ATMOSPHERE_VERTEX_SHADER}
+          fragmentShader={ATMOSPHERE_FRAGMENT_SHADER}
+          side={BackSide}
+          blending={AdditiveBlending}
+          transparent
+          depthWrite={false}
+        />
+      </mesh>
       <mesh>
         <sphereGeometry args={[GLOBE.RADIUS, GLOBE.SPHERE_SEGMENTS, GLOBE.SPHERE_SEGMENTS]} />
         <meshBasicMaterial color={colors.ocean} />

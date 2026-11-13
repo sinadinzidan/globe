@@ -14,6 +14,22 @@ Both are pannable and zoomable, share the sector filter, the plant list and the 
 are styled from the same theme tokens in `src/index.css` (`--map-*` for the map, `--chart-*` for the
 sectors).
 
+## Exploring
+
+The dashboard is built as a game of discovery:
+
+- **Discover plants.** Plants start as outlines. Opening one fills it in and earns experience.
+- **Explore next** sends the map to the nearest undiscovered plant (shortcut: `N`; `Esc` steps back).
+  The play button beside it runs a **guided tour** that moves from plant to plant by itself.
+- **Ranks.** Experience raises the explorer from Scout to Director.
+- **Achievements** are unlocked by completing a sector, reaching every emirate, opening the globe
+  and discovering everything.
+
+Progress is saved in the browser (`localStorage`) and can be reset from the Achievements tab.
+Experience values, ranks and achievements are defined in
+`src/constants/dashboard/explorerConstants.ts`; the rules are in
+`src/lib/dashboard/explorerProgress.ts`.
+
 ## Running it
 
 Requires Node 24 and npm 11.3 or newer (see `.nvmrc`).

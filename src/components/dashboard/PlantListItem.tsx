@@ -1,4 +1,6 @@
+import { CircleCheck } from 'lucide-react';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
+import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { cn } from '@/lib/utils';
@@ -12,6 +14,7 @@ export const PlantListItem = ({ plant }: PlantListItemProperties) => {
   const { state, dispatch } = usePlantDashboard();
 
   const isSelected = state.selectedPlantId === plant.id;
+  const isDiscovered = state.discoveredPlantIds.includes(plant.id);
 
   const handleSelect = () => {
     dispatch(
@@ -29,14 +32,21 @@ export const PlantListItem = ({ plant }: PlantListItemProperties) => {
         onClick={handleSelect}
         className={cn(
           'flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50',
-          isSelected && 'bg-muted',
+          isSelected && 'bg-muted ring-1 ring-primary/50',
         )}
       >
-        <SectorBadge sector={plant.sector} />
-        <span className="flex min-w-0 flex-col">
+        <SectorBadge sector={plant.sector} isMuted={!isDiscovered} />
+        <span className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-sm font-medium">{plant.name}</span>
           <span className="truncate text-xs text-muted-foreground">{plant.operator}</span>
         </span>
+        {isDiscovered && (
+          <CircleCheck
+            role="img"
+            aria-label={EXPLORER_COPY.DISCOVERED_BADGE}
+            className="size-4 shrink-0 text-primary"
+          />
+        )}
       </button>
     </li>
   );

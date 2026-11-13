@@ -4,6 +4,7 @@ import { GlobeBeacon } from '@/components/dashboard/globe/GlobeBeacon';
 import { GlobePin } from '@/components/dashboard/globe/GlobePin';
 import { GlobePlantMarker } from '@/components/dashboard/globe/GlobePlantMarker';
 import { GLOBE_OVERLAY_ELEMENT_ID } from '@/constants/dashboard/globe/globeConstants';
+import { useNextPlant } from '@/hooks/dashboard/useNextPlant';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { useVisiblePlants } from '@/hooks/dashboard/useVisiblePlants';
 import type { MapData } from '@/types/dashboard/mapTypes';
@@ -17,6 +18,7 @@ interface GlobeMarkersProperties {
 export const GlobeMarkers = ({ mapData, isRegionVisible }: GlobeMarkersProperties) => {
   const { state } = usePlantDashboard();
   const { visiblePlants } = useVisiblePlants();
+  const { nextPlant, isNextPlantNew } = useNextPlant();
 
   const uaeCentre = useMemo(() => {
     const [longitude, latitude] = geoCentroid(mapData.uae);
@@ -32,6 +34,7 @@ export const GlobeMarkers = ({ mapData, isRegionVisible }: GlobeMarkersPropertie
               plant={plant}
               index={index}
               isSelected={plant.id === state.selectedPlantId}
+              isTarget={isNextPlantNew && plant.id === nextPlant?.id}
             />
           </GlobePin>
         ))

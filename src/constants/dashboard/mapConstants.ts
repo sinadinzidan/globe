@@ -30,3 +30,6 @@ export const ACTIVATION_KEYS: readonly string[] = ['Enter', ' '];
 
 /** View box that puts the origin at the centre of a marker drawn in its own SVG. */
 export const MARKER_VIEW_BOX = '-20 -20 40 40';
+
+/** Approximate centre of the UAE, used as the starting point when nothing is selected. */
+export const UAE_CENTRE = { longitude: 54.3, latitude: 23.9 } as const;

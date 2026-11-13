@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { FlatMapBeacon } from '@/components/dashboard/flat-map/FlatMapBeacon';
 import { FlatMapPlantMarker } from '@/components/dashboard/flat-map/FlatMapPlantMarker';
 import { EMIRATE_LABEL, EMIRATE_ORDER, LARGE_EMIRATES } from '@/constants/dashboard/plantConstants';
+import { useNextPlant } from '@/hooks/dashboard/useNextPlant';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { useVisiblePlants } from '@/hooks/dashboard/useVisiblePlants';
 import { projectCentroid, projectPoint, toPinnedTransform } from '@/lib/dashboard/flatMapGeometry';
@@ -28,6 +29,7 @@ export const FlatMapOverlay = ({
 }: FlatMapOverlayProperties) => {
   const { state } = usePlantDashboard();
   const { visiblePlants } = useVisiblePlants();
+  const { nextPlant, isNextPlantNew } = useNextPlant();
 
   const emirateLabels = useMemo(
     () =>
@@ -81,6 +83,7 @@ export const FlatMapOverlay = ({
           plant={marker.plant}
           index={marker.index}
           isSelected={marker.isSelected}
+          isTarget={isNextPlantNew && marker.plant.id === nextPlant?.id}
           transform={toPinnedTransform(marker.point, scale)}
         />
       ))}

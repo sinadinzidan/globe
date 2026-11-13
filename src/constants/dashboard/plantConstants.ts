@@ -10,6 +10,8 @@ interface SectorPresentation {
   icon: LucideIcon;
   /** Theme token classes. The colour always appears next to the icon, never alone. */
   fillClassName: string;
+  strokeClassName: string;
+  textClassName: string;
   backgroundClassName: string;
 }
 
@@ -18,24 +20,32 @@ export const SECTOR_PRESENTATION: Record<PlantSector, SectorPresentation> = {
     label: 'Oil, gas and chemicals',
     icon: Flame,
     fillClassName: 'fill-chart-1',
+    strokeClassName: 'stroke-chart-1',
+    textClassName: 'text-chart-1',
     backgroundClassName: 'bg-chart-1',
   },
   [PlantSector.POWER_AND_WATER]: {
     label: 'Power and water',
     icon: Zap,
     fillClassName: 'fill-chart-2',
+    strokeClassName: 'stroke-chart-2',
+    textClassName: 'text-chart-2',
     backgroundClassName: 'bg-chart-2',
   },
   [PlantSector.METALS]: {
     label: 'Metals',
     icon: Factory,
     fillClassName: 'fill-chart-3',
+    strokeClassName: 'stroke-chart-3',
+    textClassName: 'text-chart-3',
     backgroundClassName: 'bg-chart-3',
   },
   [PlantSector.CLEAN_ENERGY]: {
     label: 'Clean energy',
     icon: Sun,
     fillClassName: 'fill-chart-4',
+    strokeClassName: 'stroke-chart-4',
+    textClassName: 'text-chart-4',
     backgroundClassName: 'bg-chart-4',
   },
 };
