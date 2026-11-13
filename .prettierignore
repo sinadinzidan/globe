@@ -1,0 +1,20 @@
+dist
+node_modules
+package-lock.json
+public/data
+
+# Copied verbatim from the project-standard repository
+docs/standards
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.cursor
+.github/copilot-instructions.md
+.windsurfrules
+eslint.config.js
+eslint-rules
+
+# Written by the shadcn CLI
+src/components/ui
+src/lib/utils.ts
+components.json

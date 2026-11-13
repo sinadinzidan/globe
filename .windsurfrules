@@ -1,0 +1,1 @@
+Follow the instructions in `AGENTS.md` at the repository root. All standards live in `docs/standards/` (start at `docs/standards/README.md`). Do not restate or override them here.

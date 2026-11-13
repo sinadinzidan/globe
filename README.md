@@ -1,1 +1,73 @@
-# globe
+# Globe
+
+An animated dashboard of industrial plants in the United Arab Emirates, drawn on an outlined world
+map. It opens on the whole world, flies to the UAE, and drops the plants in at their locations.
+
+There are two views of the same data:
+
+| View     | Route    | Built with                                                        |
+| -------- | -------- | ----------------------------------------------------------------- |
+| Flat map | `/map`   | SVG, `d3-geo` (Natural Earth projection) and `d3-zoom`            |
+| Globe    | `/globe` | WebGL, `three` through `@react-three/fiber`, loaded on first open |
+
+Both are pannable and zoomable, share the sector filter, the plant list and the selected plant, and
+are styled from the same theme tokens in `src/index.css` (`--map-*` for the map, `--chart-*` for the
+sectors).
+
+## Running it
+
+Requires Node 24 and npm 11.3 or newer (see `.nvmrc`).
+
+```bash
+npm install
+npm run dev
+```
+
+| Script                   | Purpose                                       |
+| ------------------------ | --------------------------------------------- |
+| `npm run dev`            | Start the development server                  |
+| `npm run build`          | Type-check and build for production           |
+| `npm run lint`           | ESLint, enforcing `docs/standards/`           |
+| `npm run typecheck`      | TypeScript                                    |
+| `npm run format:check`   | Prettier                                      |
+| `npm run build:map-data` | Regenerate the map outlines in `public/data/` |
+
+## Data
+
+Everything the dashboard shows is loaded from `public/data/`:
+
+| File                     | Content                                                              |
+| ------------------------ | -------------------------------------------------------------------- |
+| `plants.json`            | The plants: name, operator, sector, emirate, longitude and latitude  |
+| `world-countries.json`   | World country outlines (Natural Earth 1:50m, TopoJSON)               |
+| `uae-region-detail.json` | The UAE and its neighbours at 1:10m, and the borders of the emirates |
+
+To change what is on the map, edit `plants.json`. The plant locations in it are approximate
+positions of well-known public sites, and are meant to be replaced with real asset data.
+
+Sectors and emirates are enums (`src/enums/dashboard/`). Their labels, icons and colours are in
+`src/constants/dashboard/plantConstants.ts`.
+
+## Animating and styling the map
+
+| To change                                   | Look in                                                |
+| ------------------------------------------- | ------------------------------------------------------ |
+| Map and sector colours                      | `src/index.css`                                        |
+| Intro delay                                 | `src/constants/dashboard/dashboardConstants.ts`        |
+| Flat map zoom levels, flight duration       | `src/constants/dashboard/flat-map/flatMapConstants.ts` |
+| Globe camera distances, damping, rotation   | `src/constants/dashboard/globe/globeConstants.ts`      |
+| Marker size and stagger                     | `src/constants/dashboard/mapConstants.ts`              |
+| Where the map looks (world, UAE, one plant) | `MapFocus` and `PlantDashboardProvider`                |
+
+## Standards
+
+This project follows the standards in [`docs/standards/`](docs/standards/README.md), copied from the
+`project-standard` repository together with its lint and format configuration. Where this project
+departs from them:
+
+- **No generated API client (03).** There is no backend or OpenAPI document. The data is static JSON,
+  loaded through React Query hooks written by hand in `src/api/` and `src/hooks/dashboard/`.
+- **No route guards (09, 11).** The dashboard has no sign-in.
+- **`src/components/ui/` is excluded from lint and Prettier.** The shadcn CLI writes those files
+  (07) with names and code that the naming rules (02) reject, and they must not be edited by hand.
+- **Dark theme only.**
