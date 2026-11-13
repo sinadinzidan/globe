@@ -1,5 +1,7 @@
 import { Earth, RotateCcw } from 'lucide-react';
+import { useParams } from 'react-router';
 import { ExplorerStatus } from '@/components/dashboard/ExplorerStatus';
+import { JourneyTrail } from '@/components/dashboard/JourneyTrail';
 import { ViewSwitcher } from '@/components/dashboard/ViewSwitcher';
 import { Button } from '@/components/ui/button';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
@@ -8,6 +10,9 @@ import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 
 export const DashboardHeader = () => {
   const { dispatch } = usePlantDashboard();
+  const { plantId } = useParams();
+
+  const isExploring = !plantId;
 
   const handleReplay = () => {
     dispatch({ type: DashboardActionType.REPLAY_INTRODUCTION });
@@ -21,16 +26,24 @@ export const DashboardHeader = () => {
         </span>
         <div className="flex min-w-0 flex-col">
           <h1 className="text-base leading-tight font-semibold">{DASHBOARD_COPY.TITLE}</h1>
-          <p className="text-sm text-muted-foreground">{DASHBOARD_COPY.SUBTITLE}</p>
+          {isExploring ? (
+            <p className="text-sm text-muted-foreground">{DASHBOARD_COPY.SUBTITLE}</p>
+          ) : (
+            <JourneyTrail />
+          )}
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <ExplorerStatus />
-        <ViewSwitcher />
-        <Button variant="outline" size="sm" onClick={handleReplay}>
-          <RotateCcw aria-hidden="true" />
-          {DASHBOARD_COPY.REPLAY_INTRODUCTION}
-        </Button>
+        {isExploring && (
+          <>
+            <ViewSwitcher />
+            <Button variant="outline" size="sm" onClick={handleReplay}>
+              <RotateCcw aria-hidden="true" />
+              {DASHBOARD_COPY.REPLAY_INTRODUCTION}
+            </Button>
+          </>
+        )}
       </div>
     </header>
   );

@@ -1,0 +1,5 @@
+export enum AssetStatus {
+  RUNNING = 'RUNNING',
+  STANDBY = 'STANDBY',
+  UNDER_MAINTENANCE = 'UNDER_MAINTENANCE',
+}

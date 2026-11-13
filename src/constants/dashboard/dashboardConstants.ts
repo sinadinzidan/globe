@@ -1,6 +1,8 @@
 export const DASHBOARD_COPY = {
   TITLE: 'UAE Industrial Plants',
   SUBTITLE: 'Major industrial sites across the United Arab Emirates',
+  JOURNEY_LABEL: 'Journey',
+  JOURNEY_MAP: 'UAE map',
   VIEW_SWITCHER_LABEL: 'Map view',
   FLAT_MAP_VIEW: 'Flat map',
   GLOBE_VIEW: 'Globe',

@@ -3,6 +3,27 @@
 An animated dashboard of industrial plants in the United Arab Emirates, drawn on an outlined world
 map. It opens on the whole world, flies to the UAE, and drops the plants in at their locations.
 
+## The journey
+
+The dashboard reads as a story that goes one level deeper at each step:
+
+| Step     | Route                              | What it shows                                          |
+| -------- | ---------------------------------- | ------------------------------------------------------ |
+| 1. Map   | `/map`, `/globe`                   | The world, then the UAE and its plants                 |
+| 2. Plant | `/plants/:plantId`                 | The plant in 3D, with its assets labelled on the model |
+| 3. Asset | `/plants/:plantId/assets/:assetId` | One asset: its model, key figures and six tabs         |
+
+Selecting a plant on the map and choosing **Enter plant** opens its 3D model. The camera descends
+onto the plant; selecting an asset on the model or in the list moves in on it, and **Open asset**
+leads to its page. The asset page has tabs for Overview, Performance, Maintenance, Inspections,
+Documents and Connections. Connections link to the assets upstream and downstream, so the journey
+can carry on from asset to asset. The trail in the header leads back up.
+
+The plant models and all asset data are **illustrative samples**. Each plant is shown with one of
+five representative layouts (`model` in `plants.json`), and every plant with the same layout shares
+the same sample assets. Replace the files in `public/data/plant-layouts/` with real data to change
+that.
+
 There are two views of the same data:
 
 | View     | Route    | Built with                                                        |

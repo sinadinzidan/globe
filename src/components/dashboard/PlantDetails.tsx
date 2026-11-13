@@ -1,4 +1,5 @@
-import { CircleCheck, X } from 'lucide-react';
+import { ArrowRight, CircleCheck, X } from 'lucide-react';
+import { Link } from 'react-router';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import {
   CardAction,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -17,9 +19,11 @@ import {
   EMIRATE_LABEL,
   SECTOR_PRESENTATION,
 } from '@/constants/dashboard/plantConstants';
+import { PLANT_COPY } from '@/constants/dashboard/plant/plantSceneConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { useVisiblePlants } from '@/hooks/dashboard/useVisiblePlants';
+import { buildPlantPath } from '@/lib/routePaths';
 
 /** Details of the selected plant, shown over the top corner of the map. */
 export const PlantDetails = () => {
@@ -79,6 +83,14 @@ export const PlantDetails = () => {
           ))}
         </dl>
       </CardContent>
+      <CardFooter>
+        <Button asChild className="w-full">
+          <Link to={buildPlantPath(selectedPlant.id)}>
+            {PLANT_COPY.ENTER_PLANT}
+            <ArrowRight aria-hidden="true" />
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

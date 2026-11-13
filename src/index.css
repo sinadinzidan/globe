@@ -23,6 +23,10 @@
   --color-map-graticule: var(--map-graticule);
   --color-map-highlight: var(--map-highlight);
   --color-map-highlight-border: var(--map-highlight-border);
+  --color-status-good: var(--status-good);
+  --color-status-warning: var(--status-warning);
+  --color-status-critical: var(--status-critical);
+  --animate-tour-progress: tour-progress linear both;
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
@@ -121,6 +125,17 @@
   --map-highlight-border: oklch(0.92 0.01 250);
   --map-atmosphere: oklch(0.7 0.12 215);
   --map-star: oklch(0.85 0.01 250);
+  --plant-ground: oklch(0.19 0.014 250);
+  --plant-pad: oklch(0.24 0.014 250);
+  --plant-grid: oklch(0.34 0.015 250);
+  --plant-body: oklch(0.74 0.02 250);
+  --plant-accent: oklch(0.62 0.08 230);
+  --plant-dark: oklch(0.42 0.02 250);
+  --plant-pipe: oklch(0.52 0.03 250);
+  --plant-scenery: oklch(0.34 0.015 250);
+  --status-good: oklch(0.75 0.15 150);
+  --status-warning: oklch(0.8 0.14 80);
+  --status-critical: oklch(0.72 0.18 25);
   --sidebar: oklch(0.2 0.015 250);
   --sidebar-foreground: oklch(0.97 0.005 250);
   --sidebar-primary: oklch(0.82 0.13 195);

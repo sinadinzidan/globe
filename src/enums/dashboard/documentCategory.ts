@@ -1,0 +1,7 @@
+export enum DocumentCategory {
+  DATASHEET = 'DATASHEET',
+  DRAWING = 'DRAWING',
+  MANUAL = 'MANUAL',
+  REPORT = 'REPORT',
+  CERTIFICATE = 'CERTIFICATE',
+}
