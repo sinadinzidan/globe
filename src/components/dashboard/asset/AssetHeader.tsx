@@ -10,7 +10,7 @@ import {
   CRITICALITY_LABEL,
   SAMPLE_DATA_LABEL,
 } from '@/constants/dashboard/assetConstants';
-import { EXPLORER_COPY, INSPECTION_EXPERIENCE } from '@/constants/dashboard/explorerConstants';
+import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { FOCUSED_ASSET_SEARCH_PARAMETER } from '@/constants/dashboard/plant/plantSceneConstants';
 import { usePlantExploration } from '@/hooks/dashboard/plant/usePlantExploration';
 import { buildAssetPath, buildPlantPath } from '@/lib/routePaths';
@@ -47,8 +47,7 @@ export const AssetHeader = ({ plant, assets, asset }: AssetHeaderProperties) => 
             <Badge variant="outline">{CRITICALITY_LABEL[asset.criticality]}</Badge>
             <Badge variant="outline" className="border-primary/40 text-primary">
               <CircleCheck aria-hidden="true" />
-              {EXPLORER_COPY.INSPECTED_BADGE} · +{INSPECTION_EXPERIENCE}{' '}
-              {EXPLORER_COPY.EXPERIENCE_UNIT}
+              {EXPLORER_COPY.INSPECTED_BADGE}
             </Badge>
             <Badge variant="outline">{SAMPLE_DATA_LABEL}</Badge>
           </div>

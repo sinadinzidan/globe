@@ -15,10 +15,10 @@ import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { useExplorerActions, useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 
 export const ResetProgressButton = () => {
-  const { experience } = useExplorerProgress();
+  const { discoveredCount, unlockedCount } = useExplorerProgress();
   const { resetProgress } = useExplorerActions();
 
-  const hasProgress = experience > 0;
+  const hasProgress = discoveredCount > 0 || unlockedCount > 0;
 
   const handleReset = () => {
     resetProgress();

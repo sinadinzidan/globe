@@ -1,10 +1,9 @@
 import {
   ASSET_KEY_SEPARATOR,
   ASSET_SPECIALIST_TARGET,
-  EXPERIENCE,
   GAS_VALUE_CHAIN,
   PERCENT,
-  RANK_THRESHOLDS,
+  RANK_SHARES,
   SECTOR_ACHIEVEMENT,
 } from '../constants/explorer.constant.js';
 import { AchievementId } from '../enums/achievement-id.enum.js';
@@ -39,8 +38,8 @@ const countInspectedByPlant = (plants: ExplorablePlant[], inspectedAssetKeys: st
   );
 
 /**
- * Every achievement with how far along it is. Only plants the user can reach count, so a user
- * limited to some plants can still complete everything that is open to them.
+ * The achievements open to a user, with how far along each is. Only plants the user can reach
+ * count, and achievements they could never complete are left out.
  */
 export const evaluateAchievements = (
   plants: ExplorablePlant[],
@@ -61,7 +60,7 @@ export const evaluateAchievements = (
     discovered.some((plant) => plant.model === model),
   );
 
-  return [
+  const statuses = [
     toStatus(AchievementId.FIRST_DISCOVERY, discovered.length, Math.min(plants.length, 1)),
     ...Object.values(PlantSector).map((sector) =>
       toStatus(SECTOR_ACHIEVEMENT[sector], inSector(discovered, sector), inSector(plants, sector)),
@@ -86,40 +85,32 @@ export const evaluateAchievements = (
     toStatus(AchievementId.GLOBE_VIEW, Number(record.hasOpenedGlobe), 1),
     toStatus(AchievementId.FULL_SURVEY, discovered.length, plants.length),
   ];
+  // An achievement with nothing to do, such as a sector the user has no plants in, is left out.
+  return statuses.filter((status) => status.total > 0);
 };
 
-/** Experience earned from discoveries, inspections and unlocked achievements together. */
-export const calculateExperience = (plants: ExplorablePlant[], record: ExplorationRecord) => {
-  const achievements = evaluateAchievements(plants, record);
-  const discoveredCount = plants.filter((plant) =>
-    record.discoveredPlantIds.includes(plant.id),
-  ).length;
-  const inspectedCount = [
-    ...countInspectedByPlant(plants, record.inspectedAssetKeys).values(),
-  ].reduce((total, count) => total + count, 0);
-  return (
-    discoveredCount * EXPERIENCE.PLANT_DISCOVERED +
-    inspectedCount * EXPERIENCE.ASSET_INSPECTED +
-    achievements.filter((achievement) => achievement.isUnlocked).length *
-      EXPERIENCE.ACHIEVEMENT_UNLOCKED
-  );
-};
-
-/** Where an amount of experience puts an explorer among the ranks. */
-export const toStanding = (experience: number) => {
+/** Where a user stands among the ranks, given how many of the achievements open to them are unlocked. */
+export const toStanding = (unlockedCount: number, availableCount: number) => {
+  const thresholds = RANK_SHARES.map((entry) => ({
+    rank: entry.rank,
+    threshold: Math.ceil(entry.share * availableCount),
+  }));
   const rankIndex = Math.max(
-    RANK_THRESHOLDS.findLastIndex((entry) => experience >= entry.threshold),
+    thresholds.findLastIndex((entry) => unlockedCount >= entry.threshold),
     0,
   );
-  const current = RANK_THRESHOLDS[rankIndex];
-  const next = RANK_THRESHOLDS.at(rankIndex + 1);
+  const current = thresholds[rankIndex];
+  const next = thresholds.at(rankIndex + 1);
   const span = next ? next.threshold - current.threshold : 0;
   return {
     rank: current.rank,
-    level: rankIndex + 1,
     nextRank: next?.rank ?? null,
-    experienceToNextRank: next ? next.threshold - experience : 0,
+    achievementsToNextRank: next ? next.threshold - unlockedCount : 0,
     rankProgressPercent:
-      span > 0 ? Math.round(((experience - current.threshold) / span) * PERCENT) : PERCENT,
+      span > 0 ? Math.round(((unlockedCount - current.threshold) / span) * PERCENT) : PERCENT,
   };
 };
+
+/** How many achievements a record unlocks. */
+export const countUnlocked = (plants: ExplorablePlant[], record: ExplorationRecord) =>
+  evaluateAchievements(plants, record).filter((achievement) => achievement.isUnlocked).length;

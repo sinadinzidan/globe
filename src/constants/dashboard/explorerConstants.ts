@@ -19,13 +19,6 @@ import type { LucideIcon } from 'lucide-react';
 import { AchievementId } from '@/enums/dashboard/achievementId';
 import { ExplorerRank } from '@/enums/dashboard/explorerRank';
 
-/**
- * Experience shown next to what earns it. The API awards the experience; these only label the
- * interface and have to match `backend/src/explorer/constants/explorer.constant.ts`.
- */
-export const DISCOVERY_EXPERIENCE = 100;
-export const INSPECTION_EXPERIENCE = 25;
-export const ACHIEVEMENT_EXPERIENCE = 250;
 export const PERCENT = 100;
 
 /** How long the tour stays on a plant, including the flight to it. */
@@ -118,13 +111,12 @@ export const PROGRESS_RING = {
 } as const;
 
 export const EXPLORER_COPY = {
-  LEVEL: 'Level',
-  EXPERIENCE_UNIT: 'XP',
   DISCOVERED: 'discovered',
   DISCOVERED_BADGE: 'Discovered',
   PROGRESS_LABEL: 'Plants discovered',
   RANK_PROGRESS_LABEL: 'Progress to the next rank',
-  TO_NEXT_RANK: 'XP to',
+  ACHIEVEMENTS_UNIT: 'achievements',
+  MORE_TO_REACH: 'more to reach',
   HIGHEST_RANK: 'Highest rank reached',
   TAB_PLANTS: 'Plants',
   TAB_ACHIEVEMENTS: 'Achievements',
@@ -147,7 +139,7 @@ export const EXPLORER_COPY = {
   RESET: 'Reset progress',
   RESET_TITLE: 'Reset your progress?',
   RESET_DESCRIPTION:
-    'This clears every discovered plant, your experience and your achievements. It cannot be undone.',
+    'This clears every discovered plant, every inspected asset and your achievements. It cannot be undone.',
   RESET_CONFIRM: 'Reset progress',
   RESET_CANCEL: 'Keep progress',
   SHORTCUT_NEXT: 'N',
@@ -163,7 +155,7 @@ export const EXPLORER_COPY = {
   PROFILE_LINK_LABEL: 'Open your explorer profile',
   ACHIEVEMENTS_TITLE: 'Achievements',
   LEADERBOARD_TITLE: 'Leaderboard',
-  LEADERBOARD_DESCRIPTION: 'The explorers with the most experience.',
+  LEADERBOARD_DESCRIPTION: 'The explorers with the most achievements.',
   LEADERBOARD_EMPTY_TITLE: 'Nobody on the board yet',
   LEADERBOARD_EMPTY_DESCRIPTION: 'Discover a plant to be the first.',
   YOU: 'You',

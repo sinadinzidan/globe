@@ -1,7 +1,6 @@
 import { Lock } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
-  ACHIEVEMENT_EXPERIENCE,
   ACHIEVEMENT_PRESENTATION,
   EXPLORER_COPY,
   PERCENT,
@@ -36,12 +35,7 @@ export const AchievementItem = ({ achievement }: AchievementItemProperties) => {
         <StatusIcon aria-hidden="true" className="size-4" />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex items-baseline justify-between gap-2">
-          <h3 className="truncate text-sm font-medium">{title}</h3>
-          <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-            +{ACHIEVEMENT_EXPERIENCE} {EXPLORER_COPY.EXPERIENCE_UNIT}
-          </span>
-        </div>
+        <h3 className="truncate text-sm font-medium">{title}</h3>
         <p className="text-xs text-muted-foreground">{description}</p>
         <div className="flex items-center gap-2">
           <Progress aria-label={title} value={percent} className="flex-1" />

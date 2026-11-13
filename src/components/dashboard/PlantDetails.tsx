@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
-import { DISCOVERY_EXPERIENCE, EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
+import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import {
   COORDINATE_FRACTION_DIGITS,
   EMIRATE_LABEL,
@@ -71,7 +71,7 @@ export const PlantDetails = () => {
       <CardContent className="flex flex-col gap-3">
         <Badge variant="outline" className="self-start border-primary/40 text-primary">
           <CircleCheck aria-hidden="true" />
-          {EXPLORER_COPY.DISCOVERED_BADGE} · +{DISCOVERY_EXPERIENCE} {EXPLORER_COPY.EXPERIENCE_UNIT}
+          {EXPLORER_COPY.DISCOVERED_BADGE}
         </Badge>
         <p className="text-sm text-muted-foreground">{selectedPlant.description}</p>
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">

@@ -5,15 +5,13 @@
  * Plants, assets and work orders, with cookie-based sign-in and role and permission based access control.
  * OpenAPI spec version: 1.0
  */
-import type { ExplorerRank } from './explorerRank';
 
 export interface LeaderboardEntryDto {
   /** Position on the board, starting at 1. */
   position: number;
   fullName: string;
-  experience: number;
-  rank: ExplorerRank;
-  level: number;
+  /** Achievements unlocked. */
+  unlockedCount: number;
   /** Whether this entry is the signed-in user. */
   isCurrentUser: boolean;
 }

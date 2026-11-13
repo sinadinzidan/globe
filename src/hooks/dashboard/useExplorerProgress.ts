@@ -24,15 +24,13 @@ const EMPTY_PROGRESS: ExplorerProgress = {
   assetCount: 0,
   achievements: [],
   unlockedCount: 0,
-  experience: 0,
   rank: ExplorerRank.SCOUT,
-  level: 1,
   nextRank: null,
-  experienceToNextRank: 0,
+  achievementsToNextRank: 0,
   rankProgressPercent: 0,
 };
 
-/** The signed-in user's discoveries, experience, rank and achievements, as the API keeps them. */
+/** The signed-in user's discoveries, rank and achievements, as the API keeps them. */
 export const useExplorerProgress = () => {
   const { data, isSuccess } = useExplorerGetProgress();
 
@@ -45,7 +43,7 @@ export const useExplorerProgress = () => {
 
 /**
  * Records what the user explores. Every action answers with the new progress, which replaces
- * the cached one, and the leaderboard is refreshed because experience may have changed.
+ * the cached one, and the leaderboard is refreshed because standings may have changed.
  */
 export const useExplorerActions = () => {
   const queryClient = useQueryClient();

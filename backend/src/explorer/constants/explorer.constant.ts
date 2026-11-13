@@ -3,20 +3,16 @@ import { PlantSector } from '../../plant/enums/plant-sector.enum.js';
 import { AchievementId } from '../enums/achievement-id.enum.js';
 import { ExplorerRank } from '../enums/explorer-rank.enum.js';
 
-/** Experience earned for each thing an explorer does. */
-export const EXPERIENCE = {
-  PLANT_DISCOVERED: 100,
-  ASSET_INSPECTED: 25,
-  ACHIEVEMENT_UNLOCKED: 250,
-} as const;
-
-/** Ranks in order, with the experience needed to reach each. */
-export const RANK_THRESHOLDS: readonly { rank: ExplorerRank; threshold: number }[] = [
-  { rank: ExplorerRank.SCOUT, threshold: 0 },
-  { rank: ExplorerRank.SURVEYOR, threshold: 500 },
-  { rank: ExplorerRank.FIELD_ENGINEER, threshold: 1500 },
-  { rank: ExplorerRank.PLANT_MANAGER, threshold: 3500 },
-  { rank: ExplorerRank.DIRECTOR, threshold: 6000 },
+/**
+ * Ranks in order, with the share of the achievements open to a user that reaches each. A share,
+ * not a count, so a user who can only reach some plants can still reach the highest rank.
+ */
+export const RANK_SHARES: readonly { rank: ExplorerRank; share: number }[] = [
+  { rank: ExplorerRank.SCOUT, share: 0 },
+  { rank: ExplorerRank.SURVEYOR, share: 0.2 },
+  { rank: ExplorerRank.FIELD_ENGINEER, share: 0.4 },
+  { rank: ExplorerRank.PLANT_MANAGER, share: 0.65 },
+  { rank: ExplorerRank.DIRECTOR, share: 0.9 },
 ];
 
 export const SECTOR_ACHIEVEMENT: Record<PlantSector, AchievementId> = {

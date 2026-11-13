@@ -19,7 +19,7 @@ export class ExplorerController {
 
   @Get('progress')
   @ApiOperation({
-    summary: 'Your discoveries, experience, rank and achievements. Any signed-in user.',
+    summary: 'Your discoveries, rank and achievements. Any signed-in user.',
   })
   @ApiOkResponse({ type: ExplorerProgressDto })
   @ApiProtected()
@@ -70,7 +70,8 @@ export class ExplorerController {
 
   @Get('leaderboard')
   @ApiOperation({
-    summary: 'The explorers with the most experience: names and standing only. Any signed-in user.',
+    summary:
+      'The explorers with the most achievements: names and standing only. Any signed-in user.',
   })
   @ApiOkResponse({ type: [LeaderboardEntryDto] })
   @ApiProtected()

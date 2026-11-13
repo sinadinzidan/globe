@@ -73,15 +73,16 @@ The whole journey is a game of discovery, and progress is kept on the server for
   slug catcher to the sales gas compressor.
 - **Explore next** on the map goes to the nearest undiscovered plant (shortcut `N`), and the play
   button runs a guided tour.
-- **Experience and ranks.** A plant earns 100 XP, an asset 25, an achievement 250, taking the
-  explorer from Scout to Director.
+- **Ranks.** Unlocking achievements raises the explorer from Scout to Director. There are no
+  points to collect.
 - **Achievements** include _Follow the gas_ (visit each stage of the gas value chain), _Gas
   master_ (every gas plant), _Plant surveyed_ (every asset of one plant) and _One group_ (a plant
-  of every company). Only plants a user can reach count, so everyone can complete their own set.
+  of every company). Only plants a user can reach count, and achievements they could never
+  complete are not shown, so everyone can finish their own set and reach the highest rank.
 - **Explorer profile** (the chip in the header) shows rank, achievements and a leaderboard of
-  names and experience.
+  names and achievements unlocked.
 
-The rules are in `backend/src/explorer/`: experience values, ranks and missions in
+The rules are in `backend/src/explorer/`: ranks and missions in
 `constants/explorer.constant.ts`, the evaluation in `utilities/explorer-rules.utility.ts`. The
 labels and icons shown for them are in `src/constants/dashboard/explorerConstants.ts`.
 

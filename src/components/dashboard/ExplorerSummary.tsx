@@ -27,23 +27,19 @@ export const ExplorerSummary = () => {
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex items-baseline justify-between gap-2">
           <h2 className="truncate text-base font-semibold">{rankLabel}</h2>
-          <span className="shrink-0 text-xs font-medium text-primary">
-            {EXPLORER_COPY.LEVEL} {progress.level}
+          <span className="shrink-0 text-xs font-medium text-primary tabular-nums">
+            {progress.unlockedCount}/{progress.achievements.length}{' '}
+            {EXPLORER_COPY.ACHIEVEMENTS_UNIT}
           </span>
         </div>
         <Progress
           aria-label={EXPLORER_COPY.RANK_PROGRESS_LABEL}
           value={progress.rankProgressPercent}
         />
-        <p className="flex justify-between gap-2 text-xs text-muted-foreground tabular-nums">
-          <span>
-            {progress.experience} {EXPLORER_COPY.EXPERIENCE_UNIT}
-          </span>
-          <span className="truncate">
-            {nextRankLabel
-              ? `${String(progress.experienceToNextRank)} ${EXPLORER_COPY.TO_NEXT_RANK} ${nextRankLabel}`
-              : EXPLORER_COPY.HIGHEST_RANK}
-          </span>
+        <p className="truncate text-xs text-muted-foreground tabular-nums">
+          {nextRankLabel
+            ? `${String(progress.achievementsToNextRank)} ${EXPLORER_COPY.MORE_TO_REACH} ${nextRankLabel}`
+            : EXPLORER_COPY.HIGHEST_RANK}
         </p>
       </div>
     </section>

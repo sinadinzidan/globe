@@ -60,7 +60,7 @@ export const getExplorerGetProgressUrl = () => {
 }
 
 /**
- * @summary Your discoveries, experience, rank and achievements. Any signed-in user.
+ * @summary Your discoveries, rank and achievements. Any signed-in user.
  */
 export const explorerGetProgress = async ( options?: Parameters<typeof httpClient>[1]): Promise<ExplorerProgressDto> => {
 
@@ -106,7 +106,7 @@ export type ExplorerGetProgressQueryResult = NonNullable<Awaited<ReturnType<type
 export type ExplorerGetProgressQueryError = void
 
 
-/** @summary Your discoveries, experience, rank and achievements. Any signed-in user. */
+/** @summary Your discoveries, rank and achievements. Any signed-in user. */
 export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explorerGetProgress>>, TError = void>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetProgress>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -117,7 +117,7 @@ export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explore
       >, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary Your discoveries, experience, rank and achievements. Any signed-in user. */
+/** @summary Your discoveries, rank and achievements. Any signed-in user. */
 export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explorerGetProgress>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetProgress>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -128,12 +128,12 @@ export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explore
       >, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary Your discoveries, experience, rank and achievements. Any signed-in user. */
+/** @summary Your discoveries, rank and achievements. Any signed-in user. */
 export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explorerGetProgress>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetProgress>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary Your discoveries, experience, rank and achievements. Any signed-in user. */
+/** @summary Your discoveries, rank and achievements. Any signed-in user. */
 export function useExplorerGetProgress<TData = Awaited<ReturnType<typeof explorerGetProgress>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetProgress>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
@@ -446,7 +446,7 @@ export const useExplorerMarkGlobeOpened = <TError = void,
 }
 
 /**
- * @summary The explorers with the most experience: names and standing only. Any signed-in user.
+ * @summary The explorers with the most achievements: names and standing only. Any signed-in user.
  */
 export const explorerGetLeaderboard = async ( options?: Parameters<typeof httpClient>[1]): Promise<LeaderboardEntryDto[]> => {
 
@@ -492,7 +492,7 @@ export type ExplorerGetLeaderboardQueryResult = NonNullable<Awaited<ReturnType<t
 export type ExplorerGetLeaderboardQueryError = void
 
 
-/** @summary The explorers with the most experience: names and standing only. Any signed-in user. */
+/** @summary The explorers with the most achievements: names and standing only. Any signed-in user. */
 export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError = void>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -503,7 +503,7 @@ export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof expl
       >, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary The explorers with the most experience: names and standing only. Any signed-in user. */
+/** @summary The explorers with the most achievements: names and standing only. Any signed-in user. */
 export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -514,12 +514,12 @@ export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof expl
       >, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary The explorers with the most experience: names and standing only. Any signed-in user. */
+/** @summary The explorers with the most achievements: names and standing only. Any signed-in user. */
 export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/** @summary The explorers with the most experience: names and standing only. Any signed-in user. */
+/** @summary The explorers with the most achievements: names and standing only. Any signed-in user. */
 export function useExplorerGetLeaderboard<TData = Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError = void>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof explorerGetLeaderboard>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
  , queryClient?: QueryClient

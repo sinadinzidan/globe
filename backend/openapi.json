@@ -1150,7 +1150,7 @@
             "access-token-cookie": []
           }
         ],
-        "summary": "Your discoveries, experience, rank and achievements. Any signed-in user.",
+        "summary": "Your discoveries, rank and achievements. Any signed-in user.",
         "tags": [
           "explorer"
         ]
@@ -1363,7 +1363,7 @@
             "access-token-cookie": []
           }
         ],
-        "summary": "The explorers with the most experience: names and standing only. Any signed-in user.",
+        "summary": "The explorers with the most achievements: names and standing only. Any signed-in user.",
         "tags": [
           "explorer"
         ]
@@ -2529,19 +2529,12 @@
           "unlockedCount": {
             "type": "number"
           },
-          "experience": {
-            "type": "number"
-          },
           "rank": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/ExplorerRank"
               }
             ]
-          },
-          "level": {
-            "type": "number",
-            "description": "One-based position of the rank."
           },
           "nextRank": {
             "nullable": true,
@@ -2551,8 +2544,9 @@
               }
             ]
           },
-          "experienceToNextRank": {
-            "type": "number"
+          "achievementsToNextRank": {
+            "type": "number",
+            "description": "Achievements still to unlock before the next rank."
           },
           "rankProgressPercent": {
             "type": "number",
@@ -2569,11 +2563,9 @@
           "assetCount",
           "achievements",
           "unlockedCount",
-          "experience",
           "rank",
-          "level",
           "nextRank",
-          "experienceToNextRank",
+          "achievementsToNextRank",
           "rankProgressPercent"
         ]
       },
@@ -2588,18 +2580,9 @@
             "type": "string",
             "example": "Reem Reliability"
           },
-          "experience": {
-            "type": "number"
-          },
-          "rank": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExplorerRank"
-              }
-            ]
-          },
-          "level": {
-            "type": "number"
+          "unlockedCount": {
+            "type": "number",
+            "description": "Achievements unlocked."
           },
           "isCurrentUser": {
             "type": "boolean",
@@ -2609,9 +2592,7 @@
         "required": [
           "position",
           "fullName",
-          "experience",
-          "rank",
-          "level",
+          "unlockedCount",
           "isCurrentUser"
         ]
       }

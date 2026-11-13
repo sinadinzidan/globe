@@ -9,7 +9,7 @@ import type { ExplorerProgressDto, LeaderboardEntryDto } from './dto/explorer.dt
 import { ExplorerProgress } from './entities/explorer-progress.entity.js';
 import type { ExplorablePlant, ExplorationRecord } from './types/explorer.type.js';
 import {
-  calculateExperience,
+  countUnlocked,
   evaluateAchievements,
   toAssetKey,
   toStanding,
@@ -64,28 +64,23 @@ export class ExplorerService {
     return this.change(user, () => EMPTY_RECORD);
   }
 
-  /** The explorers with the most experience. Only names and standing are shown. */
+  /** The explorers with the most achievements. Only names and standing are shown. */
   async getLeaderboard(user: AuthenticatedUser): Promise<LeaderboardEntryDto[]> {
     const rows = await this.progressRepository
       .createQueryBuilder('progress')
       .innerJoinAndSelect('progress.user', 'user')
-      .where('progress.experience > 0')
+      .where('progress.unlockedAchievementCount > 0')
       .andWhere('user.isActive = true')
-      .orderBy('progress.experience', 'DESC')
+      .orderBy('progress.unlockedAchievementCount', 'DESC')
       .addOrderBy('progress.updatedAt', 'ASC')
       .take(LEADERBOARD_SIZE)
       .getMany();
-    return rows.map((row, index) => {
-      const { rank, level } = toStanding(row.experience);
-      return {
-        position: index + 1,
-        fullName: row.user.fullName,
-        experience: row.experience,
-        rank,
-        level,
-        isCurrentUser: row.userId === user.id,
-      };
-    });
+    return rows.map((row, index) => ({
+      position: index + 1,
+      fullName: row.user.fullName,
+      unlockedCount: row.unlockedAchievementCount,
+      isCurrentUser: row.userId === user.id,
+    }));
   }
 
   /**
@@ -108,7 +103,7 @@ export class ExplorerService {
       await manager.update(
         ExplorerProgress,
         { userId: user.id },
-        { ...next, experience: calculateExperience(plants, next) },
+        { ...next, unlockedAchievementCount: countUnlocked(plants, next) },
       );
       return next;
     });
@@ -140,7 +135,7 @@ export class ExplorerService {
   private toDto(plants: ExplorablePlant[], record: ExplorationRecord): ExplorerProgressDto {
     const reachableIds = new Set(plants.map((plant) => plant.id));
     const achievements = evaluateAchievements(plants, record);
-    const experience = calculateExperience(plants, record);
+    const unlockedCount = achievements.filter((achievement) => achievement.isUnlocked).length;
     const inspectedAssetKeys = record.inspectedAssetKeys.filter((key) =>
       reachableIds.has(key.split(ASSET_KEY_SEPARATOR)[0] ?? ''),
     );
@@ -156,9 +151,8 @@ export class ExplorerService {
       inspectedCount: inspectedAssetKeys.length,
       assetCount: plants.reduce((total, plant) => total + plant.assetCount, 0),
       achievements,
-      unlockedCount: achievements.filter((achievement) => achievement.isUnlocked).length,
-      experience,
-      ...toStanding(experience),
+      unlockedCount,
+      ...toStanding(unlockedCount, achievements.length),
     };
   }
 }

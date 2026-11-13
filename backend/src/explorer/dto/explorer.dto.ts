@@ -45,20 +45,14 @@ export class ExplorerProgressDto {
   @ApiProperty()
   unlockedCount: number;
 
-  @ApiProperty()
-  experience: number;
-
   @ApiProperty({ enum: ExplorerRank, enumName: 'ExplorerRank' })
   rank: ExplorerRank;
-
-  @ApiProperty({ description: 'One-based position of the rank.' })
-  level: number;
 
   @ApiProperty({ enum: ExplorerRank, enumName: 'ExplorerRank', nullable: true })
   nextRank: ExplorerRank | null;
 
-  @ApiProperty()
-  experienceToNextRank: number;
+  @ApiProperty({ description: 'Achievements still to unlock before the next rank.' })
+  achievementsToNextRank: number;
 
   @ApiProperty({ description: 'Progress through the current rank, from 0 to 100.' })
   rankProgressPercent: number;
@@ -71,14 +65,8 @@ export class LeaderboardEntryDto {
   @ApiProperty({ example: 'Reem Reliability' })
   fullName: string;
 
-  @ApiProperty()
-  experience: number;
-
-  @ApiProperty({ enum: ExplorerRank, enumName: 'ExplorerRank' })
-  rank: ExplorerRank;
-
-  @ApiProperty()
-  level: number;
+  @ApiProperty({ description: 'Achievements unlocked.' })
+  unlockedCount: number;
 
   @ApiProperty({ description: 'Whether this entry is the signed-in user.' })
   isCurrentUser: boolean;

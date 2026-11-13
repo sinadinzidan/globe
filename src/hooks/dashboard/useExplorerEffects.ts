@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import {
-  ACHIEVEMENT_EXPERIENCE,
   ACHIEVEMENT_PRESENTATION,
   EXPLORER_COPY,
   RANK_PRESENTATION,
@@ -10,6 +9,7 @@ import {
   TOUR_DWELL_MILLISECONDS,
 } from '@/constants/dashboard/explorerConstants';
 import { AchievementId } from '@/enums/dashboard/achievementId';
+import type { ExplorerRank } from '@/enums/dashboard/explorerRank';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { useExplorerActions, useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { useNextPlant } from '@/hooks/dashboard/useNextPlant';
@@ -19,7 +19,7 @@ const KEY_DOWN_EVENT = 'keydown';
 
 interface EarnedSnapshot {
   unlockedIds: string[];
-  level: number;
+  rank: ExplorerRank;
 }
 
 /**
@@ -28,7 +28,7 @@ interface EarnedSnapshot {
  */
 export const useExplorerEffects = () => {
   const { state, dispatch } = usePlantDashboard();
-  const { achievements, level, rank, isReady, discoveredPlantIds } = useExplorerProgress();
+  const { achievements, rank, isReady, discoveredPlantIds } = useExplorerProgress();
   const { discoverPlant } = useExplorerActions();
   const { nextPlant } = useNextPlant();
 
@@ -47,7 +47,7 @@ export const useExplorerEffects = () => {
     }
     const unlockedIds = unlockedKey ? unlockedKey.split(',') : [];
     const previous = earnedSnapshot.current;
-    earnedSnapshot.current = { unlockedIds, level };
+    earnedSnapshot.current = { unlockedIds, rank };
     if (!previous) {
       return;
     }
@@ -56,16 +56,14 @@ export const useExplorerEffects = () => {
     );
     for (const id of newlyUnlocked) {
       toast.success(EXPLORER_COPY.ACHIEVEMENT_UNLOCKED, {
-        description: `${ACHIEVEMENT_PRESENTATION[id].title} · +${String(ACHIEVEMENT_EXPERIENCE)} ${EXPLORER_COPY.EXPERIENCE_UNIT}`,
+        description: ACHIEVEMENT_PRESENTATION[id].title,
       });
     }
-    if (level > previous.level) {
-      const { label } = RANK_PRESENTATION[rank];
-      toast.success(EXPLORER_COPY.RANK_REACHED, {
-        description: `${EXPLORER_COPY.LEVEL} ${String(level)} · ${label}`,
-      });
+    // Ranks only rise as achievements are unlocked, so a different rank after an unlock is a higher one.
+    if (rank !== previous.rank && newlyUnlocked.length > 0) {
+      toast.success(EXPLORER_COPY.RANK_REACHED, { description: RANK_PRESENTATION[rank].label });
     }
-  }, [isReady, unlockedKey, level, rank]);
+  }, [isReady, unlockedKey, rank]);
 
   const isSelectedPlantNew =
     isReady && selectedPlantId !== null && !discoveredPlantIds.includes(selectedPlantId);

@@ -5,7 +5,7 @@ import { ROUTE_PATH } from '@/constants/routeConstants';
 import { RoutePath } from '@/enums/routePath';
 import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 
-/** A compact rank and experience readout for the header. Leads to the explorer profile. */
+/** A compact rank and achievements readout for the header. Leads to the explorer profile. */
 export const ExplorerStatus = () => {
   const progress = useExplorerProgress();
 
@@ -26,11 +26,10 @@ export const ExplorerStatus = () => {
       </span>
       <span className="flex w-52 flex-col gap-1">
         <span className="flex items-baseline justify-between gap-2 text-xs">
-          <span className="truncate font-medium">
-            {EXPLORER_COPY.LEVEL} {progress.level} · {label}
-          </span>
+          <span className="truncate font-medium">{label}</span>
           <span className="shrink-0 text-muted-foreground tabular-nums">
-            {progress.experience} {EXPLORER_COPY.EXPERIENCE_UNIT}
+            {progress.unlockedCount}/{progress.achievements.length}{' '}
+            {EXPLORER_COPY.ACHIEVEMENTS_UNIT}
           </span>
         </span>
         <Progress

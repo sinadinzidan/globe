@@ -23,12 +23,10 @@ export interface ExplorerProgressDto {
   assetCount: number;
   achievements: AchievementStatusDto[];
   unlockedCount: number;
-  experience: number;
   rank: ExplorerRank;
-  /** One-based position of the rank. */
-  level: number;
   nextRank: ExplorerRank | null;
-  experienceToNextRank: number;
+  /** Achievements still to unlock before the next rank. */
+  achievementsToNextRank: number;
   /** Progress through the current rank, from 0 to 100. */
   rankProgressPercent: number;
 }

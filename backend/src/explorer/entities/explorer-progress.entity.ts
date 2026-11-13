@@ -34,7 +34,7 @@ export class ExplorerProgress {
   /** Kept up to date on every change, so the leaderboard can be read without recalculating. */
   @Index()
   @Column({ type: 'integer', default: 0 })
-  experience: number;
+  unlockedAchievementCount: number;
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
