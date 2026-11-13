@@ -15,8 +15,8 @@ export default defineConfig({
     hookTimeout: TEST_TIMEOUT_MILLISECONDS,
     env: {
       NODE_ENV: 'test',
-      DATABASE_URL:
-        process.env.TEST_DATABASE_URL ?? 'postgres://globe:globe_dev@127.0.0.1:5432/globe_test',
+      // The tests empty this database. Point it at one that holds nothing you want to keep.
+      DATABASE_URL: process.env.TEST_DATABASE_URL ?? '',
       JWT_SECRET: 'test-only-secret-that-is-at-least-32-bytes-long',
       JWT_ISSUER: 'globe-api-test',
       JWT_AUDIENCE: 'globe-web-test',
