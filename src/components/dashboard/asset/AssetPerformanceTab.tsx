@@ -1,14 +1,29 @@
 import { TrendChart } from '@/components/dashboard/asset/TrendChart';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { ErrorState } from '@/components/shared/ErrorState';
+import { LoadingState } from '@/components/shared/LoadingState';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ASSET_COPY } from '@/constants/dashboard/asset/assetPageConstants';
-import type { AssetTrend } from '@/types/dashboard/assetTypes';
+import { useAssetTrends } from '@/hooks/dashboard/asset/useAssetRecords';
 
 interface AssetPerformanceTabProperties {
-  trends: AssetTrend[];
+  plantId: string;
+  assetId: string;
 }
 
-export const AssetPerformanceTab = ({ trends }: AssetPerformanceTabProperties) => {
+export const AssetPerformanceTab = ({ plantId, assetId }: AssetPerformanceTabProperties) => {
+  const { data: trends, isPending, isError, refetch } = useAssetTrends(plantId, assetId);
+
+  const handleRetry = () => {
+    void refetch();
+  };
+
+  if (isPending) {
+    return <LoadingState />;
+  }
+  if (isError) {
+    return <ErrorState onRetry={handleRetry} />;
+  }
   if (trends.length === 0) {
     return (
       <EmptyState

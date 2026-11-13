@@ -38,18 +38,9 @@ import { AssetType } from '@/enums/dashboard/assetType';
 import { ConnectionDirection } from '@/enums/dashboard/connectionDirection';
 import { DocumentCategory } from '@/enums/dashboard/documentCategory';
 import { InspectionResult } from '@/enums/dashboard/inspectionResult';
-import { PlantModel } from '@/enums/dashboard/plantModel';
 import { StatusTone } from '@/enums/dashboard/statusTone';
 import { WorkOrderStatus } from '@/enums/dashboard/workOrderStatus';
 import { WorkOrderType } from '@/enums/dashboard/workOrderType';
-
-export const PLANT_LAYOUT_URL: Record<PlantModel, string> = {
-  [PlantModel.PROCESS_PLANT]: '/data/plant-layouts/process-plant.json',
-  [PlantModel.POWER_AND_WATER_PLANT]: '/data/plant-layouts/power-and-water-plant.json',
-  [PlantModel.METALS_PLANT]: '/data/plant-layouts/metals-plant.json',
-  [PlantModel.SOLAR_PARK]: '/data/plant-layouts/solar-park.json',
-  [PlantModel.NUCLEAR_PLANT]: '/data/plant-layouts/nuclear-plant.json',
-};
 
 interface LabelledIcon {
   label: string;

@@ -12,7 +12,7 @@ interface AssetPageProperties {
 
 /** The last level of the journey: everything about one asset. */
 export const AssetPage = ({ plant, assets, asset }: AssetPageProperties) => (
-  <main className="flex min-h-0 flex-1 animate-in flex-col gap-6 overflow-y-auto p-4 duration-500 fade-in md:p-6">
+  <main className="flex min-h-0 flex-1 animate-in flex-col gap-6 overflow-y-auto p-4 duration-500 fade-in *:shrink-0 md:p-6">
     <AssetHeader plant={plant} asset={asset} />
     <AssetHero asset={asset} />
     <AssetTabs plant={plant} assets={assets} asset={asset} />

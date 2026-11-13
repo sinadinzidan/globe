@@ -8,6 +8,8 @@ import { loadStoredProgress, saveStoredProgress } from '@/lib/dashboard/explorer
 import type { DashboardAction, DashboardState } from '@/types/dashboard/dashboardTypes';
 
 interface PlantDashboardProviderProperties {
+  /** Whose exploring progress to keep. Progress is saved per user in this browser. */
+  userId: string;
   children: ReactNode;
 }
 
@@ -19,8 +21,8 @@ const STATIONARY_ACTIONS: readonly DashboardActionType[] = [
   DashboardActionType.RESET_PROGRESS,
 ];
 
-const createInitialState = (): DashboardState => ({
-  ...loadStoredProgress(),
+const createInitialState = (userId: string): DashboardState => ({
+  ...loadStoredProgress(userId),
   selectedPlantId: null,
   activeSectors: SECTOR_ORDER,
   focus: MapFocus.WORLD,
@@ -78,15 +80,15 @@ const dashboardReducer = (state: DashboardState, action: DashboardAction): Dashb
     : { ...nextState, focusRevision: state.focusRevision + 1 };
 };
 
-export const PlantDashboardProvider = ({ children }: PlantDashboardProviderProperties) => {
-  const [state, dispatch] = useReducer(dashboardReducer, undefined, createInitialState);
+export const PlantDashboardProvider = ({ userId, children }: PlantDashboardProviderProperties) => {
+  const [state, dispatch] = useReducer(dashboardReducer, userId, createInitialState);
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state]);
   const { discoveredPlantIds, hasOpenedGlobe } = state;
 
   useEffect(() => {
-    saveStoredProgress({ discoveredPlantIds, hasOpenedGlobe });
-  }, [discoveredPlantIds, hasOpenedGlobe]);
+    saveStoredProgress(userId, { discoveredPlantIds, hasOpenedGlobe });
+  }, [userId, discoveredPlantIds, hasOpenedGlobe]);
 
   return <PlantDashboardContext value={contextValue}>{children}</PlantDashboardContext>;
 };

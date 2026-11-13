@@ -1,0 +1,2186 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/users": {
+      "get": {
+        "operationId": "userList",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number, starting at 1.",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Items per page.",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPageDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission USER_READ, or the request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "List users, a page at a time. Requires USER_READ.",
+        "tags": [
+          "users"
+        ]
+      },
+      "post": {
+        "operationId": "userCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission USER_MANAGE, or the request header is missing."
+          },
+          "409": {
+            "description": "A user with this email already exists."
+          },
+          "422": {
+            "description": "One of the plants does not exist."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Create a user. Requires USER_MANAGE.",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/users/{userId}": {
+      "get": {
+        "operationId": "userFindOne",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission USER_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such user."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "One user. Requires USER_READ.",
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "operationId": "userUpdate",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission USER_MANAGE, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such user."
+          },
+          "422": {
+            "description": "One of the plants does not exist."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Change a user. Requires USER_MANAGE. You cannot change your own role or deactivate yourself. Changing a role or deactivating signs the user out everywhere.",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/users/{userId}/reset-password": {
+      "post": {
+        "operationId": "userResetPassword",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password was set."
+          },
+          "400": {
+            "description": "The password is not acceptable."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission USER_MANAGE, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such user."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Set a user's password and sign them out everywhere. Requires USER_MANAGE.",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "authLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The access and refresh tokens are set as HttpOnly cookies. The body is empty."
+          },
+          "400": {
+            "description": "The request body is not valid."
+          },
+          "401": {
+            "description": "The email or password is incorrect."
+          },
+          "403": {
+            "description": "The required request header is missing, or the request came from another site."
+          },
+          "429": {
+            "description": "Too many attempts. Try again later."
+          }
+        },
+        "summary": "Sign in with an email and password. Public.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "authRefresh",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "The access and refresh tokens are set as HttpOnly cookies. The body is empty."
+          },
+          "401": {
+            "description": "The refresh token is missing, expired, revoked or already used. A reused token ends the session."
+          },
+          "403": {
+            "description": "The required request header is missing, or the request came from another site."
+          },
+          "429": {
+            "description": "Too many attempts. Try again later."
+          }
+        },
+        "summary": "Exchange the refresh token cookie for new tokens. Public: it is called when the access token has expired.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "authLogout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "The session was ended."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Sign out: end the session and clear the cookies. Any signed-in user.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "authMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The signed-in user, with their role and permissions. Any signed-in user.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/change-password": {
+      "post": {
+        "operationId": "authChangePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The access and refresh tokens are set as HttpOnly cookies. The body is empty."
+          },
+          "400": {
+            "description": "The current password is wrong, or the new one is not acceptable."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Change your own password. Ends all your sessions and starts a new one here. Any signed-in user.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/sessions": {
+      "get": {
+        "operationId": "authListSessions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The places you are signed in. Any signed-in user, own sessions only.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/sessions/{sessionId}": {
+      "delete": {
+        "operationId": "authEndSession",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The session was ended."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "404": {
+            "description": "You have no such session."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Sign out one of your sessions. Any signed-in user, own sessions only.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/roles": {
+      "get": {
+        "operationId": "roleList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ROLE_READ, or the request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Every role and the permissions it grants. Requires ROLE_READ.",
+        "tags": [
+          "roles"
+        ]
+      }
+    },
+    "/api/plants": {
+      "get": {
+        "operationId": "plantList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlantDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission PLANT_READ, or the request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The plants you may see. Requires PLANT_READ. Without PLANT_READ_ALL, only your assigned plants.",
+        "tags": [
+          "plants"
+        ]
+      }
+    },
+    "/api/plants/{plantId}": {
+      "get": {
+        "operationId": "plantFindOne",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlantDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission PLANT_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant, or you have no access to it."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "One plant. Requires PLANT_READ and access to the plant.",
+        "tags": [
+          "plants"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets": {
+      "get": {
+        "operationId": "assetGetLayout",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlantLayoutDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ASSET_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The 3D layout of a plant and its assets. Requires ASSET_READ and access to the plant.",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets/{assetId}": {
+      "get": {
+        "operationId": "assetFindOne",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ASSET_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "One asset with its specifications. Requires ASSET_READ and access to the plant.",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets/{assetId}/trends": {
+      "get": {
+        "operationId": "assetGetTrends",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssetTrendDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ASSET_PERFORMANCE_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "An asset's readings. Requires ASSET_PERFORMANCE_READ and access to the plant.",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets/{assetId}/inspections": {
+      "get": {
+        "operationId": "assetGetInspections",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssetInspectionDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ASSET_INSPECTION_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "An asset's inspections. Requires ASSET_INSPECTION_READ and access to the plant.",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets/{assetId}/documents": {
+      "get": {
+        "operationId": "assetGetDocuments",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssetDocumentDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission ASSET_DOCUMENT_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "An asset's document register. Requires ASSET_DOCUMENT_READ and access to the plant.",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/plants/{plantId}/assets/{assetId}/work-orders": {
+      "get": {
+        "operationId": "workOrderListForAsset",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkOrderDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission WORK_ORDER_READ, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "An asset's work orders. Requires WORK_ORDER_READ and access to the plant.",
+        "tags": [
+          "work-orders"
+        ]
+      },
+      "post": {
+        "operationId": "workOrderCreate",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkOrderDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission WORK_ORDER_CREATE, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Raise a work order on an asset. Requires WORK_ORDER_CREATE and access to the plant.",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/work-orders/{workOrderId}": {
+      "patch": {
+        "operationId": "workOrderUpdate",
+        "parameters": [
+          {
+            "name": "workOrderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkOrderDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid."
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission WORK_ORDER_UPDATE_ANY or WORK_ORDER_UPDATE_OWN, or the request header is missing."
+          },
+          "404": {
+            "description": "There is no such work order, or you have no access to its plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Change a work order. Requires access to its plant, and either WORK_ORDER_UPDATE_ANY, or WORK_ORDER_UPDATE_OWN for one you raised.",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Globe API",
+    "description": "Plants, assets and work orders, with cookie-based sign-in and role and permission based access control.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "access-token-cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "globe_access"
+      }
+    },
+    "schemas": {
+      "Role": {
+        "type": "string",
+        "enum": [
+          "ADMINISTRATOR",
+          "PLANT_MANAGER",
+          "RELIABILITY_ENGINEER",
+          "MAINTENANCE_PLANNER",
+          "INSPECTOR",
+          "OPERATOR",
+          "VIEWER"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "example": "planner@example.com"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Mariam Planner"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Deactivated users cannot sign in."
+          },
+          "plantIds": {
+            "description": "The plants the user is assigned to.",
+            "example": [
+              "ruwais-refinery"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName",
+          "role",
+          "isActive",
+          "plantIds",
+          "createdAt"
+        ]
+      },
+      "UserPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "The number of users in total."
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageSize": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "planner@example.com",
+            "maxLength": 320
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Mariam Planner",
+            "maxLength": 200
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "password": {
+            "type": "string",
+            "description": "The first password. Give it to the user, who should change it after signing in.",
+            "format": "password",
+            "minLength": 12,
+            "maxLength": 128
+          },
+          "plantIds": {
+            "description": "The plants to assign. Not needed for roles that reach every plant.",
+            "example": [
+              "ruwais-refinery"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "fullName",
+          "role",
+          "password"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "Mariam Planner",
+            "maxLength": 200
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Deactivating a user signs them out everywhere."
+          },
+          "plantIds": {
+            "description": "Replaces the plants the user is assigned to.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "The new password. Give it to the user, who should change it after signing in.",
+            "format": "password",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email address of the account.",
+            "example": "administrator@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the account.",
+            "format": "password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "Permission": {
+        "type": "string",
+        "enum": [
+          "PLANT_READ",
+          "PLANT_READ_ALL",
+          "ASSET_READ",
+          "ASSET_PERFORMANCE_READ",
+          "ASSET_INSPECTION_READ",
+          "ASSET_DOCUMENT_READ",
+          "WORK_ORDER_READ",
+          "WORK_ORDER_CREATE",
+          "WORK_ORDER_UPDATE_OWN",
+          "WORK_ORDER_UPDATE_ANY",
+          "USER_READ",
+          "USER_MANAGE",
+          "ROLE_READ"
+        ]
+      },
+      "CurrentUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "example": "administrator@example.com"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Amal Administrator"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          },
+          "hasAllPlantAccess": {
+            "type": "boolean",
+            "description": "Whether the user reaches every plant, rather than only assigned ones."
+          },
+          "plantIds": {
+            "description": "The plants the user is assigned to.",
+            "example": [
+              "ruwais-refinery"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "The session this request was made with.",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName",
+          "role",
+          "permissions",
+          "hasAllPlantAccess",
+          "plantIds",
+          "sessionId"
+        ]
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "description": "The password in use now.",
+            "format": "password"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "The new password. Any characters are allowed; very common passwords are refused.",
+            "format": "password",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "SessionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userAgent": {
+            "type": "string",
+            "description": "The browser or device, as it identified itself.",
+            "nullable": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "The network address the session was started from.",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the session ends at the latest."
+          },
+          "isCurrent": {
+            "type": "boolean",
+            "description": "Whether this is the session the request was made with."
+          }
+        },
+        "required": [
+          "id",
+          "userAgent",
+          "ipAddress",
+          "createdAt",
+          "expiresAt",
+          "isCurrent"
+        ]
+      },
+      "RoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          }
+        },
+        "required": [
+          "role",
+          "permissions"
+        ]
+      },
+      "PlantSector": {
+        "type": "string",
+        "enum": [
+          "OIL_GAS_AND_CHEMICALS",
+          "POWER_AND_WATER",
+          "METALS",
+          "CLEAN_ENERGY"
+        ]
+      },
+      "Emirate": {
+        "type": "string",
+        "enum": [
+          "ABU_DHABI",
+          "DUBAI",
+          "SHARJAH",
+          "AJMAN",
+          "UMM_AL_QUWAIN",
+          "RAS_AL_KHAIMAH",
+          "FUJAIRAH"
+        ]
+      },
+      "PlantModel": {
+        "type": "string",
+        "enum": [
+          "PROCESS_PLANT",
+          "POWER_AND_WATER_PLANT",
+          "METALS_PLANT",
+          "SOLAR_PARK",
+          "NUCLEAR_PLANT"
+        ]
+      },
+      "PlantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A readable identifier, used in URLs.",
+            "example": "ruwais-refinery"
+          },
+          "name": {
+            "type": "string",
+            "example": "Ruwais Refinery"
+          },
+          "operator": {
+            "type": "string",
+            "example": "ADNOC Refining"
+          },
+          "sector": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlantSector"
+              }
+            ]
+          },
+          "emirate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Emirate"
+              }
+            ]
+          },
+          "longitude": {
+            "type": "number",
+            "example": 52.73
+          },
+          "latitude": {
+            "type": "number",
+            "example": 24.11
+          },
+          "description": {
+            "type": "string"
+          },
+          "model": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlantModel"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "operator",
+          "sector",
+          "emirate",
+          "longitude",
+          "latitude",
+          "description",
+          "model"
+        ]
+      },
+      "GroundPositionDto": {
+        "type": "object",
+        "properties": {
+          "east": {
+            "type": "number",
+            "description": "Metres east of the plant centre."
+          },
+          "south": {
+            "type": "number",
+            "description": "Metres south of the plant centre."
+          }
+        },
+        "required": [
+          "east",
+          "south"
+        ]
+      },
+      "SceneryBuildingDto": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/GroundPositionDto"
+          },
+          "width": {
+            "type": "number"
+          },
+          "depth": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "position",
+          "width",
+          "depth",
+          "height"
+        ]
+      },
+      "AssetType": {
+        "type": "string",
+        "enum": [
+          "STORAGE_TANK",
+          "SPHERE_TANK",
+          "PUMP",
+          "COMPRESSOR",
+          "HEAT_EXCHANGER",
+          "FURNACE",
+          "COLUMN",
+          "STACK",
+          "TURBINE",
+          "GENERATOR",
+          "BOILER",
+          "TRANSFORMER",
+          "DESALINATION_UNIT",
+          "PROCESS_HALL",
+          "SILO",
+          "SOLAR_ARRAY",
+          "INVERTER",
+          "REACTOR_BUILDING"
+        ]
+      },
+      "AssetStatus": {
+        "type": "string",
+        "enum": [
+          "RUNNING",
+          "STANDBY",
+          "UNDER_MAINTENANCE"
+        ]
+      },
+      "AssetCriticality": {
+        "type": "string",
+        "enum": [
+          "HIGH",
+          "MEDIUM",
+          "LOW"
+        ]
+      },
+      "AssetIndicatorDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Design pressure"
+          },
+          "value": {
+            "type": "string",
+            "example": "3.5 bar"
+          },
+          "unit": {
+            "type": "string",
+            "example": "%"
+          }
+        },
+        "required": [
+          "label",
+          "value",
+          "unit"
+        ]
+      },
+      "ConnectionDirection": {
+        "type": "string",
+        "enum": [
+          "UPSTREAM",
+          "DOWNSTREAM"
+        ]
+      },
+      "AssetConnectionDto": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "description": "The identifier of the connected asset in the same plant.",
+            "example": "h-101"
+          },
+          "direction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionDirection"
+              }
+            ]
+          },
+          "medium": {
+            "type": "string",
+            "example": "Hot feed"
+          }
+        },
+        "required": [
+          "assetId",
+          "direction",
+          "medium"
+        ]
+      },
+      "AssetSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifies the asset inside its plant, and in URLs.",
+            "example": "c-101"
+          },
+          "tag": {
+            "type": "string",
+            "example": "C-101"
+          },
+          "name": {
+            "type": "string",
+            "example": "Fractionation column"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetType"
+              }
+            ]
+          },
+          "area": {
+            "type": "string",
+            "example": "Process unit"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetStatus"
+              }
+            ]
+          },
+          "criticality": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetCriticality"
+              }
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/GroundPositionDto"
+          },
+          "rotation": {
+            "type": "number",
+            "description": "Rotation about the vertical axis, in degrees."
+          },
+          "scale": {
+            "type": "number"
+          },
+          "indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetIndicatorDto"
+            }
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetConnectionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tag",
+          "name",
+          "type",
+          "area",
+          "status",
+          "criticality",
+          "description",
+          "position",
+          "rotation",
+          "scale",
+          "indicators",
+          "connections"
+        ]
+      },
+      "PlantLayoutDto": {
+        "type": "object",
+        "properties": {
+          "scenery": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SceneryBuildingDto"
+            }
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetSummaryDto"
+            }
+          }
+        },
+        "required": [
+          "scenery",
+          "assets"
+        ]
+      },
+      "LabelledValueDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Design pressure"
+          },
+          "value": {
+            "type": "string",
+            "example": "3.5 bar"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      },
+      "AssetDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifies the asset inside its plant, and in URLs.",
+            "example": "c-101"
+          },
+          "tag": {
+            "type": "string",
+            "example": "C-101"
+          },
+          "name": {
+            "type": "string",
+            "example": "Fractionation column"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetType"
+              }
+            ]
+          },
+          "area": {
+            "type": "string",
+            "example": "Process unit"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetStatus"
+              }
+            ]
+          },
+          "criticality": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetCriticality"
+              }
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/GroundPositionDto"
+          },
+          "rotation": {
+            "type": "number",
+            "description": "Rotation about the vertical axis, in degrees."
+          },
+          "scale": {
+            "type": "number"
+          },
+          "indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetIndicatorDto"
+            }
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetConnectionDto"
+            }
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelledValueDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tag",
+          "name",
+          "type",
+          "area",
+          "status",
+          "criticality",
+          "description",
+          "position",
+          "rotation",
+          "scale",
+          "indicators",
+          "connections",
+          "specifications"
+        ]
+      },
+      "AssetTrendDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "example": "Top temperature"
+          },
+          "unit": {
+            "type": "string",
+            "example": "°C"
+          },
+          "values": {
+            "description": "Hourly readings, oldest first.",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "unit",
+          "values"
+        ]
+      },
+      "InspectionResult": {
+        "type": "string",
+        "enum": [
+          "ACCEPTABLE",
+          "MONITOR",
+          "ACTION_REQUIRED"
+        ]
+      },
+      "AssetInspectionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "INS-20412"
+          },
+          "title": {
+            "type": "string"
+          },
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InspectionResult"
+              }
+            ]
+          },
+          "daysAgo": {
+            "type": "number"
+          },
+          "nextDueInDays": {
+            "type": "number",
+            "description": "Negative when the next inspection is overdue."
+          },
+          "finding": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "result",
+          "daysAgo",
+          "nextDueInDays",
+          "finding"
+        ]
+      },
+      "DocumentCategory": {
+        "type": "string",
+        "enum": [
+          "DATASHEET",
+          "DRAWING",
+          "MANUAL",
+          "REPORT",
+          "CERTIFICATE"
+        ]
+      },
+      "AssetDocumentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string",
+            "example": "C-101-DAT-412"
+          },
+          "category": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentCategory"
+              }
+            ]
+          },
+          "revision": {
+            "type": "string",
+            "example": "C"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "number",
+          "category",
+          "revision"
+        ]
+      },
+      "WorkOrderType": {
+        "type": "string",
+        "enum": [
+          "PREVENTIVE",
+          "PREDICTIVE",
+          "CORRECTIVE"
+        ]
+      },
+      "WorkOrderStatus": {
+        "type": "string",
+        "enum": [
+          "OPEN",
+          "PLANNED",
+          "IN_PROGRESS",
+          "COMPLETED"
+        ]
+      },
+      "WorkOrderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string",
+            "example": "WO-512345"
+          },
+          "title": {
+            "type": "string",
+            "example": "Calibrate instruments"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderType"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderStatus"
+              }
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "example": "2026-12-01"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdByName": {
+            "type": "string",
+            "description": "Who raised it. Empty for imported work orders.",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "canUpdate": {
+            "type": "boolean",
+            "description": "Whether you may change this work order."
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "title",
+          "type",
+          "status",
+          "dueDate",
+          "completedAt",
+          "createdByName",
+          "createdAt",
+          "canUpdate"
+        ]
+      },
+      "CreateWorkOrderDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Replace worn components",
+            "maxLength": 200
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderType"
+              }
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-12-01"
+          }
+        },
+        "required": [
+          "title",
+          "type"
+        ]
+      },
+      "UpdateWorkOrderDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderStatus"
+              }
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Send null to clear it."
+          }
+        }
+      }
+    }
+  }
+}

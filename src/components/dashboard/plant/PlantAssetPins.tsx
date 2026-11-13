@@ -34,9 +34,9 @@ export const PlantAssetPins = ({
       return (
         <div
           key={asset.id}
-          data-x={asset.position.x}
+          data-x={asset.position.east}
           data-y={assetHeight(asset) + PLANT_SCENE.LABEL_CLEARANCE}
-          data-z={asset.position.z}
+          data-z={asset.position.south}
           className={cn('pointer-events-auto invisible absolute top-0 left-0', isActive && 'z-10')}
         >
           <button

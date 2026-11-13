@@ -1,6 +1,10 @@
+import { EmptyState } from '@/components/shared/EmptyState';
+import { ErrorState } from '@/components/shared/ErrorState';
+import { LoadingState } from '@/components/shared/LoadingState';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ASSET_COPY } from '@/constants/dashboard/asset/assetPageConstants';
 import { ASSET_TYPE_PRESENTATION } from '@/constants/dashboard/assetConstants';
+import { useAssetDetail } from '@/hooks/dashboard/asset/useAssetRecords';
 import type { Asset, LabelledValue } from '@/types/dashboard/assetTypes';
 import type { Plant } from '@/types/dashboard/plantTypes';
 
@@ -25,12 +29,18 @@ const FactList = ({ facts }: FactListProperties) => (
 );
 
 export const AssetOverviewTab = ({ plant, asset }: AssetOverviewTabProperties) => {
+  const { data: detail, isPending, isError, refetch } = useAssetDetail(plant.id, asset.id);
+
   const location = [
     { label: ASSET_COPY.TAG_LABEL, value: asset.tag },
     { label: ASSET_COPY.TYPE_LABEL, value: ASSET_TYPE_PRESENTATION[asset.type].label },
     { label: ASSET_COPY.PLANT_LABEL, value: plant.name },
     { label: ASSET_COPY.AREA_LABEL, value: asset.area },
   ];
+
+  const handleRetry = () => {
+    void refetch();
+  };
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -63,7 +73,10 @@ export const AssetOverviewTab = ({ plant, asset }: AssetOverviewTabProperties) =
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <FactList facts={asset.specifications} />
+          {isPending && <LoadingState />}
+          {!isPending && isError && <ErrorState onRetry={handleRetry} />}
+          {detail?.specifications.length === 0 && <EmptyState />}
+          {detail && detail.specifications.length > 0 && <FactList facts={detail.specifications} />}
         </CardContent>
       </Card>
     </div>

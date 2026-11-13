@@ -1,9 +1,2 @@
-export enum Emirate {
-  ABU_DHABI = 'ABU_DHABI',
-  DUBAI = 'DUBAI',
-  SHARJAH = 'SHARJAH',
-  AJMAN = 'AJMAN',
-  UMM_AL_QUWAIN = 'UMM_AL_QUWAIN',
-  RAS_AL_KHAIMAH = 'RAS_AL_KHAIMAH',
-  FUJAIRAH = 'FUJAIRAH',
-}
+// Defined by the API. The generated client is the single declaration.
+export { Emirate } from '@/api/generated/model';

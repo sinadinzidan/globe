@@ -5,8 +5,7 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { Button } from '@/components/ui/button';
 import { ASSET_COPY } from '@/constants/dashboard/asset/assetPageConstants';
-import { ROUTE_PATH } from '@/constants/routeConstants';
-import { RoutePath } from '@/enums/routePath';
+import { DEFAULT_SIGNED_IN_PATH } from '@/constants/routeConstants';
 import { usePlantJourney } from '@/hooks/dashboard/usePlantJourney';
 import { buildPlantPath } from '@/lib/routePaths';
 
@@ -27,7 +26,7 @@ export const AssetView = () => {
           description={ASSET_COPY.NOT_FOUND_DESCRIPTION}
         />
         <Button asChild variant="outline">
-          <Link to={plant ? buildPlantPath(plant.id) : ROUTE_PATH[RoutePath.FLAT_MAP]}>
+          <Link to={plant ? buildPlantPath(plant.id) : DEFAULT_SIGNED_IN_PATH}>
             {ASSET_COPY.BACK_TO_PLANT}
           </Link>
         </Button>

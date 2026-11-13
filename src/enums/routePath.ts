@@ -1,8 +1,12 @@
 export enum RoutePath {
   ROOT = 'ROOT',
+  LOGIN = 'LOGIN',
   FLAT_MAP = 'FLAT_MAP',
   GLOBE = 'GLOBE',
   PLANT = 'PLANT',
   ASSET = 'ASSET',
+  ACCOUNT = 'ACCOUNT',
+  USERS = 'USERS',
+  ROLES = 'ROLES',
   NOT_FOUND = 'NOT_FOUND',
 }

@@ -1,5 +1,2 @@
-export enum InspectionResult {
-  ACCEPTABLE = 'ACCEPTABLE',
-  MONITOR = 'MONITOR',
-  ACTION_REQUIRED = 'ACTION_REQUIRED',
-}
+// Defined by the API. The generated client is the single declaration.
+export { InspectionResult } from '@/api/generated/model';

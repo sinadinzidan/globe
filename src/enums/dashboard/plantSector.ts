@@ -1,6 +1,2 @@
-export enum PlantSector {
-  OIL_GAS_AND_CHEMICALS = 'OIL_GAS_AND_CHEMICALS',
-  POWER_AND_WATER = 'POWER_AND_WATER',
-  METALS = 'METALS',
-  CLEAN_ENERGY = 'CLEAN_ENERGY',
-}
+// Defined by the API. The generated client is the single declaration.
+export { PlantSector } from '@/api/generated/model';

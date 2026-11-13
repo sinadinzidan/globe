@@ -1,6 +1,2 @@
-export enum WorkOrderStatus {
-  OPEN = 'OPEN',
-  PLANNED = 'PLANNED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-}
+// Defined by the API. The generated client is the single declaration.
+export { WorkOrderStatus } from '@/api/generated/model';

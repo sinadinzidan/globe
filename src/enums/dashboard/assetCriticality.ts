@@ -1,5 +1,2 @@
-export enum AssetCriticality {
-  HIGH = 'HIGH',
-  MEDIUM = 'MEDIUM',
-  LOW = 'LOW',
-}
+// Defined by the API. The generated client is the single declaration.
+export { AssetCriticality } from '@/api/generated/model';

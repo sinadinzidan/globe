@@ -28,8 +28,12 @@ export const PlantGround = ({ scenery }: PlantGroundProperties) => {
       />
       {scenery.map((building) => (
         <mesh
-          key={`${String(building.position.x)}:${String(building.position.z)}`}
-          position={[building.position.x, building.height * PLANT_SCENE.HALF, building.position.z]}
+          key={`${String(building.position.east)}:${String(building.position.south)}`}
+          position={[
+            building.position.east,
+            building.height * PLANT_SCENE.HALF,
+            building.position.south,
+          ]}
         >
           <boxGeometry args={[building.width, building.height, building.depth]} />
           <meshStandardMaterial color={colors.scenery} roughness={1} />

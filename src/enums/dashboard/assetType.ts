@@ -1,20 +1,2 @@
-export enum AssetType {
-  STORAGE_TANK = 'STORAGE_TANK',
-  SPHERE_TANK = 'SPHERE_TANK',
-  PUMP = 'PUMP',
-  COMPRESSOR = 'COMPRESSOR',
-  HEAT_EXCHANGER = 'HEAT_EXCHANGER',
-  FURNACE = 'FURNACE',
-  COLUMN = 'COLUMN',
-  STACK = 'STACK',
-  TURBINE = 'TURBINE',
-  GENERATOR = 'GENERATOR',
-  BOILER = 'BOILER',
-  TRANSFORMER = 'TRANSFORMER',
-  DESALINATION_UNIT = 'DESALINATION_UNIT',
-  PROCESS_HALL = 'PROCESS_HALL',
-  SILO = 'SILO',
-  SOLAR_ARRAY = 'SOLAR_ARRAY',
-  INVERTER = 'INVERTER',
-  REACTOR_BUILDING = 'REACTOR_BUILDING',
-}
+// Defined by the API. The generated client is the single declaration.
+export { AssetType } from '@/api/generated/model';

@@ -1,5 +1,2 @@
-export enum AssetStatus {
-  RUNNING = 'RUNNING',
-  STANDBY = 'STANDBY',
-  UNDER_MAINTENANCE = 'UNDER_MAINTENANCE',
-}
+// Defined by the API. The generated client is the single declaration.
+export { AssetStatus } from '@/api/generated/model';

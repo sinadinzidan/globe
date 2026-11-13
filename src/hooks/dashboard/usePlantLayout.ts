@@ -1,10 +1,7 @@
-import { skipToken, useQuery } from '@tanstack/react-query';
-import { plantLayoutQueryOptions } from '@/hooks/dashboard/dashboardQueries';
-import { PlantModel } from '@/enums/dashboard/plantModel';
+import { useAssetGetLayout } from '@/api/generated/assets/assets';
+import type { ApiError } from '@/api/httpClient';
+import type { PlantLayout } from '@/types/dashboard/assetTypes';
 
-/** The representative layout and assets of a plant model. Waits until the model is known. */
-export const usePlantLayout = (model: PlantModel | undefined) =>
-  useQuery({
-    ...plantLayoutQueryOptions(model ?? PlantModel.PROCESS_PLANT),
-    ...(model ? {} : { queryFn: skipToken }),
-  });
+/** The 3D layout and assets of a plant. */
+export const usePlantLayout = (plantId: string) =>
+  useAssetGetLayout<PlantLayout, ApiError>(plantId);

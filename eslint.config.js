@@ -22,6 +22,12 @@ export default tseslint.config(
       'eslint-rules',
       // Written by the shadcn CLI and never edited by hand (see 07). Names and code are set by the tool.
       'src/components/ui',
+      // Written by Orval from the backend's OpenAPI document and never edited by hand (see 03).
+      'src/api/generated',
+      // The backend has its own lint configuration.
+      'backend',
+      // Configuration of the client generator. Its option names are set by the tool.
+      'orval.config.ts',
     ],
   },
 

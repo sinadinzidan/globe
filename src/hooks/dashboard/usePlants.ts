@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-import { plantsQueryOptions } from '@/hooks/dashboard/dashboardQueries';
+import { usePlantList } from '@/api/generated/plants/plants';
 
-export const usePlants = () => useQuery(plantsQueryOptions);
+/** The plants the signed-in user may see. */
+export const usePlants = () => usePlantList();

@@ -1,4 +1,5 @@
 import { AssetTab } from '@/enums/dashboard/assetTab';
+import { Permission } from '@/enums/permission';
 
 export const ASSET_TAB_ORDER = Object.values(AssetTab);
 
@@ -9,6 +10,14 @@ export const ASSET_TAB_LABEL: Record<AssetTab, string> = {
   [AssetTab.INSPECTIONS]: 'Inspections',
   [AssetTab.DOCUMENTS]: 'Documents',
   [AssetTab.CONNECTIONS]: 'Connections',
+};
+
+/** The permission a tab needs. Tabs without an entry are open to everyone who sees the asset. */
+export const ASSET_TAB_PERMISSION: Partial<Record<AssetTab, Permission>> = {
+  [AssetTab.PERFORMANCE]: Permission.ASSET_PERFORMANCE_READ,
+  [AssetTab.MAINTENANCE]: Permission.WORK_ORDER_READ,
+  [AssetTab.INSPECTIONS]: Permission.ASSET_INSPECTION_READ,
+  [AssetTab.DOCUMENTS]: Permission.ASSET_DOCUMENT_READ,
 };
 
 /** Geometry of a trend chart, in pixels. The width follows the container. */
@@ -57,7 +66,24 @@ export const ASSET_COPY = {
   TASK_COLUMN: 'Task',
   TYPE_COLUMN: 'Type',
   STATUS_COLUMN: 'Status',
-  WHEN_COLUMN: 'When',
+  DUE_COLUMN: 'Due',
+  RAISED_BY_COLUMN: 'Raised by',
+  IMPORTED: 'Imported',
+  NO_DUE_DATE: 'No date',
+  RAISE_WORK_ORDER: 'Raise work order',
+  RAISE_TITLE: 'Raise a work order',
+  RAISE_DESCRIPTION: 'Describe the work this asset needs.',
+  TITLE_LABEL: 'What needs doing',
+  TYPE_LABEL_FIELD: 'Type',
+  DUE_DATE_LABEL: 'Due date',
+  DUE_DATE_HINT: 'Optional.',
+  TITLE_REQUIRED: 'Describe the work.',
+  RAISE: 'Raise work order',
+  RAISING: 'Raising…',
+  CANCEL: 'Cancel',
+  RAISE_FAILED: 'The work order could not be raised.',
+  UPDATE_FAILED: 'The work order could not be changed.',
+  CHANGE_STATUS_LABEL: 'Status of',
   NO_WORK_ORDERS_TITLE: 'No work orders',
   NO_WORK_ORDERS_DESCRIPTION: 'There is no maintenance recorded for this asset.',
   TODAY: 'Today',

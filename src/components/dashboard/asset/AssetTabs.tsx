@@ -10,9 +10,12 @@ import {
   ASSET_COPY,
   ASSET_TAB_LABEL,
   ASSET_TAB_ORDER,
+  ASSET_TAB_PERMISSION,
 } from '@/constants/dashboard/asset/assetPageConstants';
 import { TAB_SEARCH_PARAMETER } from '@/constants/routeConstants';
 import { AssetTab } from '@/enums/dashboard/assetTab';
+import { useCurrentUser } from '@/hooks/auth/useCurrentUser';
+import { findEnumValue } from '@/lib/enumValue';
 import type { Asset } from '@/types/dashboard/assetTypes';
 import type { Plant } from '@/types/dashboard/plantTypes';
 
@@ -22,18 +25,20 @@ interface AssetTabsProperties {
   asset: Asset;
 }
 
-/** The asset's information, one subject per tab. The open tab is kept in the URL. */
+/**
+ * The asset's information, one subject per tab. A tab is only offered, and its data only
+ * requested, when the user's role includes it. The open tab is kept in the URL.
+ */
 export const AssetTabs = ({ plant, assets, asset }: AssetTabsProperties) => {
   const [searchParameters, setSearchParameters] = useSearchParams();
+  const { hasPermission } = useCurrentUser();
 
+  const availableTabs = ASSET_TAB_ORDER.filter((tab) => {
+    const permission = ASSET_TAB_PERMISSION[tab];
+    return permission === undefined || hasPermission(permission);
+  });
   const requestedTab = searchParameters.get(TAB_SEARCH_PARAMETER);
-  const activeTab = ASSET_TAB_ORDER.find((tab) => tab === requestedTab) ?? AssetTab.OVERVIEW;
-  const counts: Partial<Record<AssetTab, number>> = {
-    [AssetTab.MAINTENANCE]: asset.workOrders.length,
-    [AssetTab.INSPECTIONS]: asset.inspections.length,
-    [AssetTab.DOCUMENTS]: asset.documents.length,
-    [AssetTab.CONNECTIONS]: asset.connections.length,
-  };
+  const activeTab = findEnumValue(availableTabs, requestedTab) ?? AssetTab.OVERVIEW;
 
   const handleTabChange = (tab: string) => {
     setSearchParameters({ [TAB_SEARCH_PARAMETER]: tab });
@@ -43,12 +48,9 @@ export const AssetTabs = ({ plant, assets, asset }: AssetTabsProperties) => {
     <Tabs value={activeTab} onValueChange={handleTabChange} className="gap-4">
       <div className="overflow-x-auto">
         <TabsList aria-label={ASSET_COPY.TABS_LABEL}>
-          {ASSET_TAB_ORDER.map((tab) => (
+          {availableTabs.map((tab) => (
             <TabsTrigger key={tab} value={tab} className="px-3">
               {ASSET_TAB_LABEL[tab]}
-              {counts[tab] !== undefined && (
-                <span className="text-muted-foreground tabular-nums">{counts[tab]}</span>
-              )}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -56,18 +58,26 @@ export const AssetTabs = ({ plant, assets, asset }: AssetTabsProperties) => {
       <TabsContent value={AssetTab.OVERVIEW}>
         <AssetOverviewTab plant={plant} asset={asset} />
       </TabsContent>
-      <TabsContent value={AssetTab.PERFORMANCE}>
-        <AssetPerformanceTab trends={asset.trends} />
-      </TabsContent>
-      <TabsContent value={AssetTab.MAINTENANCE}>
-        <AssetMaintenanceTab workOrders={asset.workOrders} />
-      </TabsContent>
-      <TabsContent value={AssetTab.INSPECTIONS}>
-        <AssetInspectionsTab inspections={asset.inspections} />
-      </TabsContent>
-      <TabsContent value={AssetTab.DOCUMENTS}>
-        <AssetDocumentsTab documents={asset.documents} />
-      </TabsContent>
+      {availableTabs.includes(AssetTab.PERFORMANCE) && (
+        <TabsContent value={AssetTab.PERFORMANCE}>
+          <AssetPerformanceTab plantId={plant.id} assetId={asset.id} />
+        </TabsContent>
+      )}
+      {availableTabs.includes(AssetTab.MAINTENANCE) && (
+        <TabsContent value={AssetTab.MAINTENANCE}>
+          <AssetMaintenanceTab plantId={plant.id} assetId={asset.id} />
+        </TabsContent>
+      )}
+      {availableTabs.includes(AssetTab.INSPECTIONS) && (
+        <TabsContent value={AssetTab.INSPECTIONS}>
+          <AssetInspectionsTab plantId={plant.id} assetId={asset.id} />
+        </TabsContent>
+      )}
+      {availableTabs.includes(AssetTab.DOCUMENTS) && (
+        <TabsContent value={AssetTab.DOCUMENTS}>
+          <AssetDocumentsTab plantId={plant.id} assetId={asset.id} />
+        </TabsContent>
+      )}
       <TabsContent value={AssetTab.CONNECTIONS}>
         <AssetConnectionsTab plant={plant} assets={assets} connections={asset.connections} />
       </TabsContent>

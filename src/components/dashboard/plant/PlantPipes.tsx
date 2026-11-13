@@ -23,15 +23,27 @@ export const PlantPipes = ({ assets }: PlantPipesProperties) => {
   );
 
   return runs.map(({ id, from, to }) => {
-    const lengthX = Math.abs(to.position.x - from.position.x) + PLANT_SCENE.PIPE_THICKNESS;
-    const lengthZ = Math.abs(to.position.z - from.position.z) + PLANT_SCENE.PIPE_THICKNESS;
+    const lengthX = Math.abs(to.position.east - from.position.east) + PLANT_SCENE.PIPE_THICKNESS;
+    const lengthZ = Math.abs(to.position.south - from.position.south) + PLANT_SCENE.PIPE_THICKNESS;
     return (
       <group key={id} position-y={PLANT_SCENE.PIPE_HEIGHT}>
-        <mesh position={[(from.position.x + to.position.x) * PLANT_SCENE.HALF, 0, from.position.z]}>
+        <mesh
+          position={[
+            (from.position.east + to.position.east) * PLANT_SCENE.HALF,
+            0,
+            from.position.south,
+          ]}
+        >
           <boxGeometry args={[lengthX, PLANT_SCENE.PIPE_THICKNESS, PLANT_SCENE.PIPE_THICKNESS]} />
           <meshStandardMaterial color={colors.pipe} roughness={1} />
         </mesh>
-        <mesh position={[to.position.x, 0, (from.position.z + to.position.z) * PLANT_SCENE.HALF]}>
+        <mesh
+          position={[
+            to.position.east,
+            0,
+            (from.position.south + to.position.south) * PLANT_SCENE.HALF,
+          ]}
+        >
           <boxGeometry args={[PLANT_SCENE.PIPE_THICKNESS, PLANT_SCENE.PIPE_THICKNESS, lengthZ]} />
           <meshStandardMaterial color={colors.pipe} roughness={1} />
         </mesh>

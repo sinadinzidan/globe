@@ -105,10 +105,12 @@ export const findNextPlant = (
     : undefined;
 };
 
-/** Reads saved progress, ignoring anything that is missing or not in the expected shape. */
-export const loadStoredProgress = (): StoredProgress => {
+/** Reads a user's saved progress, ignoring anything that is missing or not in the expected shape. */
+const toStorageKey = (userId: string) => `${PROGRESS_STORAGE_KEY}.${userId}`;
+
+export const loadStoredProgress = (userId: string): StoredProgress => {
   try {
-    const stored: unknown = JSON.parse(window.localStorage.getItem(PROGRESS_STORAGE_KEY) ?? '');
+    const stored: unknown = JSON.parse(window.localStorage.getItem(toStorageKey(userId)) ?? '');
     const candidate = stored as Partial<StoredProgress> | null;
     if (!candidate || !Array.isArray(candidate.discoveredPlantIds)) {
       return EMPTY_PROGRESS;
@@ -124,10 +126,10 @@ export const loadStoredProgress = (): StoredProgress => {
   }
 };
 
-/** Saves progress. Storage can be unavailable, in which case progress lasts for the visit only. */
-export const saveStoredProgress = (progress: StoredProgress) => {
+/** Saves a user's progress. Storage can be unavailable, in which case progress lasts for the visit only. */
+export const saveStoredProgress = (userId: string, progress: StoredProgress) => {
   try {
-    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    window.localStorage.setItem(toStorageKey(userId), JSON.stringify(progress));
   } catch {
     // Nothing to do: the dashboard works the same without saved progress.
   }

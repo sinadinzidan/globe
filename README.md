@@ -20,9 +20,8 @@ Documents and Connections. Connections link to the assets upstream and downstrea
 can carry on from asset to asset. The trail in the header leads back up.
 
 The plant models and all asset data are **illustrative samples**. Each plant is shown with one of
-five representative layouts (`model` in `plants.json`), and every plant with the same layout shares
-the same sample assets. Replace the files in `public/data/plant-layouts/` with real data to change
-that.
+five representative layouts (`model` in `plants.json`), and every plant with the same layout starts
+with the same sample assets. Work orders are real records: they can be raised and changed.
 
 There are two views of the same data:
 
@@ -53,25 +52,108 @@ Experience values, ranks and achievements are defined in
 
 ## Running it
 
-Requires Node 24 and npm 11.3 or newer (see `.nvmrc`).
+Requires Node 24.11 or newer, npm 11.3 or newer, and PostgreSQL 16.
 
 ```bash
+# 1. A database. Any PostgreSQL works; this starts one in Docker.
+POSTGRES_PASSWORD=choose-one docker compose up -d
+
+# 2. The API
+cd backend
+cp .env.example .env          # then fill in DATABASE_URL, JWT_SECRET and SEED_PASSWORD
 npm install
-npm run dev
+npm run migration:run
+npm run seed
+npm run start:dev             # http://localhost:3000, docs at /api/docs
+
+# 3. The web application, in another terminal
+cd ..
+npm install
+npm run dev                   # http://localhost:5173
 ```
 
-| Script                   | Purpose                                       |
-| ------------------------ | --------------------------------------------- |
-| `npm run dev`            | Start the development server                  |
-| `npm run build`          | Type-check and build for production           |
-| `npm run lint`           | ESLint, enforcing `docs/standards/`           |
-| `npm run typecheck`      | TypeScript                                    |
-| `npm run format:check`   | Prettier                                      |
-| `npm run build:map-data` | Regenerate the map outlines in `public/data/` |
+The web application reaches the API through the development server's `/api` proxy, so both are on
+one origin and the session cookies are first-party. Serve them from one origin in production too.
+
+Seeding creates one account per role, all with the password you set as `SEED_PASSWORD`:
+
+| Email                                | Role                 | Plants                          |
+| ------------------------------------ | -------------------- | ------------------------------- |
+| `administrator@globe.example`        | Administrator        | Every plant                     |
+| `plant.manager@globe.example`        | Plant manager        | The three Ruwais plants         |
+| `reliability.engineer@globe.example` | Reliability engineer | Every plant                     |
+| `maintenance.planner@globe.example`  | Maintenance planner  | Ruwais Refinery, Habshan        |
+| `inspector@globe.example`            | Inspector            | Two Jebel Ali plants, MBR Solar |
+| `operator@globe.example`             | Operator             | Ruwais Refinery                 |
+| `viewer@globe.example`               | Viewer               | Barakah, Noor Abu Dhabi         |
+
+| Script                   | Purpose                                                    |
+| ------------------------ | ---------------------------------------------------------- |
+| `npm run dev`            | Start the development server                               |
+| `npm run build`          | Type-check and build for production                        |
+| `npm run lint`           | ESLint, enforcing `docs/standards/`                        |
+| `npm run typecheck`      | TypeScript                                                 |
+| `npm run format:check`   | Prettier                                                   |
+| `npm test`               | Unit tests of the request layer and redirect handling      |
+| `npm run api:generate`   | Regenerate `src/api/generated` from `backend/openapi.json` |
+| `npm run build:map-data` | Regenerate the map outlines in `public/data/`              |
+
+The backend's scripts are listed in [`backend/README.md`](backend/README.md).
+
+## Access control
+
+Every user has one **role**. A role is a fixed set of **permissions**, defined in one place:
+`backend/src/common/constants/role-permission.constant.ts`. Routes and services check permissions,
+never role names. The Roles and permissions page in the application shows the same matrix.
+
+| Role                 | Reaches         | Can do                                                                             |
+| -------------------- | --------------- | ---------------------------------------------------------------------------------- |
+| Administrator        | Every plant     | Everything, including managing users                                               |
+| Plant manager        | Assigned plants | See everything about them, raise and change any work order, see users              |
+| Reliability engineer | Every plant     | See performance, inspections and documents; raise work orders and change their own |
+| Maintenance planner  | Assigned plants | See documents; raise and change any work order                                     |
+| Inspector            | Assigned plants | See inspections and documents; raise work orders and change their own              |
+| Operator             | Assigned plants | See performance; raise work orders and change their own                            |
+| Viewer               | Assigned plants | See plants and assets, nothing more                                                |
+
+On top of the role, access is checked per record:
+
+- **Plants.** A role without "see every plant" only reaches the plants the user is assigned. A
+  plant outside that scope is answered exactly like one that does not exist.
+- **Work orders.** "Change their own" means only work orders the user raised.
+- **Users.** Nobody can change their own role or deactivate their own account.
+- **Sessions.** Users see and end only their own sessions.
+
+The API enforces all of this. The web application only reflects it: it hides tabs, buttons and
+pages a role does not include, and the API checks every request again.
+
+### How signing in works
+
+- Sign-in sets two cookies that scripts cannot read (`HttpOnly`, `Secure`, `SameSite=Strict`): a
+  ten-minute signed access token for the API, and a refresh token sent only to `/api/auth`.
+- The refresh token is random, stored only as a hash, and replaced on every use. Presenting an
+  already-used one ends the whole session, since it means two parties hold it.
+- Each request re-reads the session and the user, so signing out, deactivating a user or changing
+  their role takes effect at once, not when the token expires.
+- Passwords are hashed with Argon2id. Five wrong passwords lock an account for fifteen minutes.
+  Sign-in answers an unknown email and a wrong password identically.
+- State-changing requests need a custom header and must come from the application's own origin.
+- The web application refreshes an expired session once, shares that refresh between simultaneous
+  requests, signs out every tab together, and returns the user to the page they asked for.
+
+### Not included
+
+- **Password reset by email, email verification and multi-factor authentication.** There is no
+  mail service. An administrator sets a user's password, which signs the user out everywhere.
+- **Rate limiting across several servers.** Request counts are kept in memory, per server.
+  Use a shared store such as Redis before running more than one instance.
+- **Refusing to be embedded in a frame** has to be set as a response header where the built
+  application is hosted. The Content Security Policy in the built page cannot express it.
 
 ## Data
 
-Everything the dashboard shows is loaded from `public/data/`:
+The map outlines are static files in `public/data/`. Everything else comes from the API, which
+keeps it in PostgreSQL. The sample content the database is seeded with is in `backend/seed-data/`:
 
 | File                     | Content                                                              |
 | ------------------------ | -------------------------------------------------------------------- |
@@ -79,8 +161,8 @@ Everything the dashboard shows is loaded from `public/data/`:
 | `world-countries.json`   | World country outlines (Natural Earth 1:50m, TopoJSON)               |
 | `uae-region-detail.json` | The UAE and its neighbours at 1:10m, and the borders of the emirates |
 
-To change what is on the map, edit `plants.json`. The plant locations in it are approximate
-positions of well-known public sites, and are meant to be replaced with real asset data.
+The plant locations are approximate positions of well-known public sites, and are meant to be
+replaced with real asset data.
 
 Sectors and emirates are enums (`src/enums/dashboard/`). Their labels, icons and colours are in
 `src/constants/dashboard/plantConstants.ts`.
@@ -100,11 +182,22 @@ Sectors and emirates are enums (`src/enums/dashboard/`). Their labels, icons and
 
 This project follows the standards in [`docs/standards/`](docs/standards/README.md), copied from the
 `project-standard` repository together with its lint and format configuration. Where this project
-departs from them:
+departs from them, or had to decide something they leave open:
 
-- **No generated API client (03).** There is no backend or OpenAPI document. The data is static JSON,
-  loaded through React Query hooks written by hand in `src/api/` and `src/hooks/dashboard/`.
-- **No route guards (09, 11).** The dashboard has no sign-in.
-- **`src/components/ui/` is excluded from lint and Prettier.** The shadcn CLI writes those files
-  (07) with names and code that the naming rules (02) reject, and they must not be edited by hand.
+- **Authentication uses NestJS's own packages, not Passport (11).** `@nestjs/authentication` and
+  `@nestjs/authorization` are what the current NestJS documentation prescribes, and they provide the
+  token model the standard asks for. Permissions are checked through their `@Can()` decorator and
+  policy classes, which read the role and permission enums.
+- **Security headers come from NestJS's built-in `useSecurityHeaders()`, not `helmet` (10).** It
+  sets the same headers.
+- **The backend has its own lint configuration (05, 10).** The standard ships one for the frontend
+  only. `backend/eslint.config.js` is derived from it, with NestJS file naming, and without the
+  boolean-prefix rule on object literals, because the option objects of NestJS, TypeORM and
+  class-validator (`whitelist`, `nullable`, ...) are named by those libraries.
+- **Generated and tool-written files are excluded from lint and Prettier:** `src/components/ui/`
+  (shadcn CLI, 07), `src/api/generated/` (Orval, 03), `backend/src/migrations/` (TypeORM CLI, 10)
+  and `orval.config.ts`, whose option names are set by the tool.
+- **The map outlines are fetched by hand (03).** They are static files, not API data.
+- **Asset specifications, readings, inspections and documents are JSON columns (10).** They are
+  sample content whose shape varies by asset type.
 - **Dark theme only.**

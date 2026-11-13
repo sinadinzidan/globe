@@ -23,8 +23,8 @@ export const assetHeight = (asset: Asset) => ASSET_MODEL[asset.type].height * as
 
 /** A close-up of one asset, keeping the direction the camera already looks from. */
 export const focusPoseFor = (asset: Asset, azimuth: number): OrbitPose => ({
-  targetX: asset.position.x,
-  targetZ: asset.position.z,
+  targetX: asset.position.east,
+  targetZ: asset.position.south,
   azimuth,
   elevation: PLANT_SCENE.FOCUS_ELEVATION,
   distance: PLANT_SCENE.FOCUS_DISTANCE + assetHeight(asset) * PLANT_SCENE.FOCUS_DISTANCE_PER_HEIGHT,

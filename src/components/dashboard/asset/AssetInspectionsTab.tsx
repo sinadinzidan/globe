@@ -1,13 +1,16 @@
 import { StatusBadge } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { ErrorState } from '@/components/shared/ErrorState';
+import { LoadingState } from '@/components/shared/LoadingState';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ASSET_COPY } from '@/constants/dashboard/asset/assetPageConstants';
 import { INSPECTION_RESULT_PRESENTATION } from '@/constants/dashboard/assetConstants';
 import { describeDayOffset } from '@/lib/dashboard/relativeDays';
-import type { Inspection } from '@/types/dashboard/assetTypes';
+import { useAssetInspections } from '@/hooks/dashboard/asset/useAssetRecords';
 
 interface AssetInspectionsTabProperties {
-  inspections: Inspection[];
+  plantId: string;
+  assetId: string;
 }
 
 const describeNextDue = (nextDueInDays: number) =>
@@ -15,7 +18,19 @@ const describeNextDue = (nextDueInDays: number) =>
     ? `${ASSET_COPY.OVERDUE_BY} ${String(-nextDueInDays)} ${ASSET_COPY.DAYS}`
     : `${ASSET_COPY.NEXT_DUE} ${describeDayOffset(nextDueInDays).toLowerCase()}`;
 
-export const AssetInspectionsTab = ({ inspections }: AssetInspectionsTabProperties) => {
+export const AssetInspectionsTab = ({ plantId, assetId }: AssetInspectionsTabProperties) => {
+  const { data: inspections, isPending, isError, refetch } = useAssetInspections(plantId, assetId);
+
+  const handleRetry = () => {
+    void refetch();
+  };
+
+  if (isPending) {
+    return <LoadingState />;
+  }
+  if (isError) {
+    return <ErrorState onRetry={handleRetry} />;
+  }
   if (inspections.length === 0) {
     return (
       <EmptyState

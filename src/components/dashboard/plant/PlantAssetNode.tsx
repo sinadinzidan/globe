@@ -38,7 +38,7 @@ export const PlantAssetNode = ({
 
   return (
     <group
-      position={[asset.position.x, 0, asset.position.z]}
+      position={[asset.position.east, 0, asset.position.south]}
       rotation-y={MathUtils.degToRad(asset.rotation)}
       scale={asset.scale}
       onClick={handleClick}

@@ -3,8 +3,6 @@ import type { LucideIcon } from 'lucide-react';
 import { Emirate } from '@/enums/dashboard/emirate';
 import { PlantSector } from '@/enums/dashboard/plantSector';
 
-export const PLANTS_DATA_URL = '/data/plants.json';
-
 interface SectorPresentation {
   label: string;
   icon: LucideIcon;

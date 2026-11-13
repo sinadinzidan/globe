@@ -1,0 +1,10 @@
+/** The emirate a plant is in. */
+export enum Emirate {
+  ABU_DHABI = 'ABU_DHABI',
+  DUBAI = 'DUBAI',
+  SHARJAH = 'SHARJAH',
+  AJMAN = 'AJMAN',
+  UMM_AL_QUWAIN = 'UMM_AL_QUWAIN',
+  RAS_AL_KHAIMAH = 'RAS_AL_KHAIMAH',
+  FUJAIRAH = 'FUJAIRAH',
+}

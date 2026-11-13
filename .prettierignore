@@ -18,3 +18,11 @@ eslint-rules
 src/components/ui
 src/lib/utils.ts
 components.json
+
+# Written by Orval
+src/api/generated
+
+# The backend formats itself; its data and OpenAPI document are generated
+backend/seed-data
+backend/openapi.json
+backend/dist

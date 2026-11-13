@@ -1,0 +1,17 @@
+# A PostgreSQL database for local development. Set POSTGRES_PASSWORD before starting:
+#   POSTGRES_PASSWORD=... docker compose up -d
+services:
+  database:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: globe
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: globe
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  database-data:
