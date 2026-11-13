@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CircleCheck } from 'lucide-react';
 import { Link } from 'react-router';
 import { StatusDot } from '@/components/dashboard/StatusDot';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import {
   ASSET_STATUS_PRESENTATION,
   ASSET_TYPE_PRESENTATION,
 } from '@/constants/dashboard/assetConstants';
+import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { PLANT_COPY } from '@/constants/dashboard/plant/plantSceneConstants';
 import { buildAssetPath } from '@/lib/routePaths';
 import { cn } from '@/lib/utils';
@@ -16,6 +17,7 @@ interface PlantAssetListItemProperties {
   plantId: string;
   asset: Asset;
   isFocused: boolean;
+  isInspected: boolean;
   onFocus: (assetId: string) => void;
   onHover: (assetId: string | null) => void;
 }
@@ -24,6 +26,7 @@ export const PlantAssetListItem = ({
   plantId,
   asset,
   isFocused,
+  isInspected,
   onFocus,
   onHover,
 }: PlantAssetListItemProperties) => {
@@ -70,6 +73,13 @@ export const PlantAssetListItem = ({
             {status.label}
           </span>
         </span>
+        {isInspected && (
+          <CircleCheck
+            role="img"
+            aria-label={EXPLORER_COPY.INSPECTED_BADGE}
+            className="size-4 shrink-0 text-primary"
+          />
+        )}
       </button>
       <Tooltip>
         <TooltipTrigger asChild>

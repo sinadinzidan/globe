@@ -71,12 +71,12 @@ export const TrendChart = ({ trend }: TrendChartProperties) => {
                 </text>
               </g>
             ))}
-            <polygon points={chart.area} className="fill-chart-2/15" />
+            <polygon points={chart.area} className="fill-chart-1/15" />
             <polyline
               points={chart.line}
               strokeLinejoin="round"
               strokeLinecap="round"
-              className="fill-none stroke-chart-2 stroke-2"
+              className="fill-none stroke-chart-1 stroke-2"
             />
             <line
               x1={activePoint.horizontal}
@@ -89,7 +89,7 @@ export const TrendChart = ({ trend }: TrendChartProperties) => {
               cx={activePoint.horizontal}
               cy={activePoint.vertical}
               r={TREND_CHART.POINT_RADIUS}
-              className="fill-chart-2 stroke-card stroke-2"
+              className="fill-chart-1 stroke-card stroke-2"
             />
             <text
               x={chart.frame.left}

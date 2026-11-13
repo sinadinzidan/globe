@@ -6,6 +6,7 @@ import {
   MARKER_STAGGER_MILLISECONDS,
 } from '@/constants/dashboard/mapConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
+import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { cn } from '@/lib/utils';
 import type { Plant } from '@/types/dashboard/plantTypes';
@@ -25,9 +26,10 @@ export const FlatMapPlantMarker = ({
   isTarget,
   transform,
 }: FlatMapPlantMarkerProperties) => {
-  const { state, dispatch } = usePlantDashboard();
+  const { dispatch } = usePlantDashboard();
+  const { discoveredPlantIds } = useExplorerProgress();
 
-  const isDiscovered = state.discoveredPlantIds.includes(plant.id);
+  const isDiscovered = discoveredPlantIds.includes(plant.id);
 
   const handleSelect = () => {
     dispatch(

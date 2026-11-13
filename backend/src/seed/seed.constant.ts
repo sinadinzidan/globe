@@ -35,7 +35,7 @@ export const SEED_USERS: readonly SeedUser[] = [
     email: 'plant.manager@globe.example',
     fullName: 'Majid Manager',
     role: Role.PLANT_MANAGER,
-    plantIds: ['ruwais-refinery', 'borouge-ruwais', 'fertiglobe-ruwais'],
+    plantIds: ['habshan-gas-complex', 'habshan-5', 'bab-gas-plant'],
   },
   {
     email: 'reliability.engineer@globe.example',
@@ -47,24 +47,24 @@ export const SEED_USERS: readonly SeedUser[] = [
     email: 'maintenance.planner@globe.example',
     fullName: 'Mariam Planner',
     role: Role.MAINTENANCE_PLANNER,
-    plantIds: ['ruwais-refinery', 'habshan-gas-complex'],
+    plantIds: ['habshan-gas-complex', 'asab-gas-plant'],
   },
   {
     email: 'inspector@globe.example',
     fullName: 'Ibrahim Inspector',
     role: Role.INSPECTOR,
-    plantIds: ['jebel-ali-complex', 'ega-jebel-ali', 'mbr-solar-park'],
+    plantIds: ['das-island-lng', 'ruwais-ngl'],
   },
   {
     email: 'operator@globe.example',
     fullName: 'Omar Operator',
     role: Role.OPERATOR,
-    plantIds: ['ruwais-refinery'],
+    plantIds: ['habshan-gas-complex'],
   },
   {
     email: 'viewer@globe.example',
     fullName: 'Vera Viewer',
     role: Role.VIEWER,
-    plantIds: ['barakah-nuclear', 'noor-abu-dhabi'],
+    plantIds: ['ruwais-refinery', 'borouge-ruwais'],
   },
 ];

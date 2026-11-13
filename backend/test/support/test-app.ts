@@ -22,7 +22,7 @@ export const OTHER_PLANT_ID = 'beta-plant';
 export const ASSET_CODE = 'p-101';
 
 const TRUNCATE_SQL =
-  'TRUNCATE TABLE "work_order", "asset", "refresh_token", "auth_session", "user_plant", "user", "plant" CASCADE';
+  'TRUNCATE TABLE "explorer_progress", "work_order", "asset", "refresh_token", "auth_session", "user_plant", "user", "plant" CASCADE';
 
 /** Emails of the fixture users. Every role except the two that reach all plants is assigned the first plant only. */
 export const TEST_EMAIL: Record<Role, string> = {
@@ -52,12 +52,12 @@ const buildPlant = (id: string): Partial<Plant> => ({
   id,
   name: id,
   operator: 'Test operator',
-  sector: PlantSector.POWER_AND_WATER,
+  sector: PlantSector.GAS,
   emirate: Emirate.ABU_DHABI,
   longitude: 54,
   latitude: 24,
   description: 'A plant for tests.',
-  model: PlantModel.POWER_AND_WATER_PLANT,
+  model: PlantModel.GAS_PROCESSING_PLANT,
   scenery: [],
 });
 

@@ -12,16 +12,16 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
-import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
-import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
+import { useExplorerActions, useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 
 export const ResetProgressButton = () => {
-  const { state, dispatch } = usePlantDashboard();
+  const { experience } = useExplorerProgress();
+  const { resetProgress } = useExplorerActions();
 
-  const hasProgress = state.discoveredPlantIds.length > 0 || state.hasOpenedGlobe;
+  const hasProgress = experience > 0;
 
   const handleReset = () => {
-    dispatch({ type: DashboardActionType.RESET_PROGRESS });
+    resetProgress();
   };
 
   return (

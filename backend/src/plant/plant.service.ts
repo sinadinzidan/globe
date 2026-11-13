@@ -17,12 +17,16 @@ export class PlantService {
 
   /** The plants the user may see: all of them, or only the ones they are assigned to. */
   async list(user: AuthenticatedUser) {
+    return (await this.listAccessible(user)).map((plant) => PlantDto.from(plant));
+  }
+
+  /** The plant records the user may see. For other services; routes return DTOs. */
+  async listAccessible(user: AuthenticatedUser) {
     const canReadAll = await this.authorizationService.can(PlantPolicy, 'readAll', user);
-    const plants = await this.plantRepository.find({
+    return this.plantRepository.find({
       where: canReadAll ? {} : { id: In(user.plantIds) },
       order: { name: 'ASC' },
     });
-    return plants.map((plant) => PlantDto.from(plant));
   }
 
   async findOne(user: AuthenticatedUser, plantId: string) {

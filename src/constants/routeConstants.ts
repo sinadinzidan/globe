@@ -13,6 +13,7 @@ export const ROUTE_PATH: Record<RoutePath, string> = {
   [RoutePath.GLOBE]: '/globe',
   [RoutePath.PLANT]: `/plants/:${ROUTE_PARAMETER.PLANT_ID}`,
   [RoutePath.ASSET]: `/plants/:${ROUTE_PARAMETER.PLANT_ID}/assets/:${ROUTE_PARAMETER.ASSET_ID}`,
+  [RoutePath.EXPLORER]: '/explorer',
   [RoutePath.ACCOUNT]: '/account',
   [RoutePath.USERS]: '/admin/users',
   [RoutePath.ROLES]: '/admin/roles',

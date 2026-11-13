@@ -12,6 +12,7 @@ import Roles from '@/pages/admin/Roles';
 import Users from '@/pages/admin/Users';
 import Account from '@/pages/dashboard/Account';
 import Asset from '@/pages/dashboard/Asset';
+import Explorer from '@/pages/dashboard/Explorer';
 import FlatMap from '@/pages/dashboard/FlatMap';
 import Globe from '@/pages/dashboard/Globe';
 import Plant from '@/pages/dashboard/Plant';
@@ -49,6 +50,7 @@ export const appRouter = createBrowserRouter([
               },
               { path: ROUTE_PATH[RoutePath.PLANT], Component: Plant },
               { path: ROUTE_PATH[RoutePath.ASSET], Component: Asset },
+              { path: ROUTE_PATH[RoutePath.EXPLORER], Component: Explorer },
               { path: ROUTE_PATH[RoutePath.ACCOUNT], Component: Account },
               {
                 // Signed in, and holding the permission each route names.

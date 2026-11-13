@@ -1,7 +1,10 @@
 import { PlantAssetListItem } from '@/components/dashboard/plant/PlantAssetListItem';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
+import { EXPLORER_COPY, PERCENT } from '@/constants/dashboard/explorerConstants';
 import { PLANT_COPY } from '@/constants/dashboard/plant/plantSceneConstants';
+import { usePlantExploration } from '@/hooks/dashboard/plant/usePlantExploration';
 import type { Asset } from '@/types/dashboard/assetTypes';
 import type { Plant } from '@/types/dashboard/plantTypes';
 
@@ -21,6 +24,8 @@ export const PlantAssetPanel = ({
   onFocusAsset,
   onHoverAsset,
 }: PlantAssetPanelProperties) => {
+  const { inspectedCount, inspectedAssetIds } = usePlantExploration(plant.id, assets);
+
   const areas = [...new Set(assets.map((asset) => asset.area))].map((area) => ({
     area,
     assets: assets.filter((asset) => asset.area === area),
@@ -31,9 +36,17 @@ export const PlantAssetPanel = ({
       aria-label={PLANT_COPY.ASSET_LIST_LABEL}
       className="flex min-h-0 flex-col border-t bg-card/40 lg:w-96 lg:border-t-0 lg:border-l"
     >
-      <div className="flex items-baseline justify-between gap-2 border-b p-4">
-        <h2 className="text-base font-semibold">{PLANT_COPY.ASSETS_TITLE}</h2>
-        <span className="text-sm text-muted-foreground tabular-nums">{assets.length}</span>
+      <div className="flex flex-col gap-2 border-b p-4">
+        <div className="flex items-baseline justify-between gap-2">
+          <h2 className="text-base font-semibold">{PLANT_COPY.ASSETS_TITLE}</h2>
+          <span className="text-sm text-muted-foreground tabular-nums">
+            {inspectedCount}/{assets.length} {EXPLORER_COPY.INSPECTED}
+          </span>
+        </div>
+        <Progress
+          aria-label={EXPLORER_COPY.ASSETS_PROGRESS_LABEL}
+          value={assets.length > 0 ? (inspectedCount / assets.length) * PERCENT : 0}
+        />
       </div>
       {assets.length === 0 ? (
         <EmptyState
@@ -55,6 +68,7 @@ export const PlantAssetPanel = ({
                       plantId={plant.id}
                       asset={asset}
                       isFocused={asset.id === focusedAssetId}
+                      isInspected={inspectedAssetIds.includes(asset.id)}
                       onFocus={onFocusAsset}
                       onHover={onHoverAsset}
                     />

@@ -5,6 +5,7 @@ export enum RoutePath {
   GLOBE = 'GLOBE',
   PLANT = 'PLANT',
   ASSET = 'ASSET',
+  EXPLORER = 'EXPLORER',
   ACCOUNT = 'ACCOUNT',
   USERS = 'USERS',
   ROLES = 'ROLES',

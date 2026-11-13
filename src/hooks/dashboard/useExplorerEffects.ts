@@ -4,14 +4,14 @@ import {
   ACHIEVEMENT_EXPERIENCE,
   ACHIEVEMENT_PRESENTATION,
   EXPLORER_COPY,
-  RANKS,
+  RANK_PRESENTATION,
   SHORTCUT_KEY,
   TEXT_ENTRY_SELECTOR,
   TOUR_DWELL_MILLISECONDS,
 } from '@/constants/dashboard/explorerConstants';
 import { AchievementId } from '@/enums/dashboard/achievementId';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
-import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
+import { useExplorerActions, useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { useNextPlant } from '@/hooks/dashboard/useNextPlant';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 
@@ -28,7 +28,8 @@ interface EarnedSnapshot {
  */
 export const useExplorerEffects = () => {
   const { state, dispatch } = usePlantDashboard();
-  const { achievements, level, rank, isReady } = useExplorerProgress();
+  const { achievements, level, rank, isReady, discoveredPlantIds } = useExplorerProgress();
+  const { discoverPlant } = useExplorerActions();
   const { nextPlant } = useNextPlant();
 
   const earnedSnapshot = useRef<EarnedSnapshot | null>(null);
@@ -59,12 +60,21 @@ export const useExplorerEffects = () => {
       });
     }
     if (level > previous.level) {
-      const label = RANKS.find((definition) => definition.rank === rank)?.label ?? '';
+      const { label } = RANK_PRESENTATION[rank];
       toast.success(EXPLORER_COPY.RANK_REACHED, {
         description: `${EXPLORER_COPY.LEVEL} ${String(level)} · ${label}`,
       });
     }
   }, [isReady, unlockedKey, level, rank]);
+
+  const isSelectedPlantNew =
+    isReady && selectedPlantId !== null && !discoveredPlantIds.includes(selectedPlantId);
+
+  useEffect(() => {
+    if (isSelectedPlantNew && selectedPlantId) {
+      discoverPlant({ plantId: selectedPlantId });
+    }
+  }, [isSelectedPlantNew, selectedPlantId, discoverPlant]);
 
   useEffect(() => {
     if (!isTouring || !nextPlantId) {

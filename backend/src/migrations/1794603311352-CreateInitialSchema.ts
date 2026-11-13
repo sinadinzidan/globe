@@ -1,23 +1,23 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateInitialSchema1794602595605 implements MigrationInterface {
-  name = 'CreateInitialSchema1794602595605';
+export class CreateInitialSchema1794603311352 implements MigrationInterface {
+  name = 'CreateInitialSchema1794603311352';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TYPE "public"."plant_sector_enum" AS ENUM('OIL_GAS_AND_CHEMICALS', 'POWER_AND_WATER', 'METALS', 'CLEAN_ENERGY')`,
+      `CREATE TYPE "public"."plant_sector_enum" AS ENUM('GAS', 'UPSTREAM', 'REFINING_AND_CHEMICALS')`,
     );
     await queryRunner.query(
       `CREATE TYPE "public"."plant_emirate_enum" AS ENUM('ABU_DHABI', 'DUBAI', 'SHARJAH', 'AJMAN', 'UMM_AL_QUWAIN', 'RAS_AL_KHAIMAH', 'FUJAIRAH')`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."plant_model_enum" AS ENUM('PROCESS_PLANT', 'POWER_AND_WATER_PLANT', 'METALS_PLANT', 'SOLAR_PARK', 'NUCLEAR_PLANT')`,
+      `CREATE TYPE "public"."plant_model_enum" AS ENUM('GAS_PROCESSING_PLANT', 'NGL_FRACTIONATION_PLANT', 'LNG_PLANT', 'PROCESS_PLANT', 'OIL_PRODUCTION_FACILITY')`,
     );
     await queryRunner.query(
       `CREATE TABLE "plant" ("id" character varying(64) NOT NULL, "name" character varying(200) NOT NULL, "operator" character varying(200) NOT NULL, "sector" "public"."plant_sector_enum" NOT NULL, "emirate" "public"."plant_emirate_enum" NOT NULL, "longitude" double precision NOT NULL, "latitude" double precision NOT NULL, "description" text NOT NULL, "model" "public"."plant_model_enum" NOT NULL, "scenery" jsonb NOT NULL DEFAULT '[]', CONSTRAINT "PK_97e1eb0d045aadea59401ece5ba" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."asset_type_enum" AS ENUM('STORAGE_TANK', 'SPHERE_TANK', 'PUMP', 'COMPRESSOR', 'HEAT_EXCHANGER', 'FURNACE', 'COLUMN', 'STACK', 'TURBINE', 'GENERATOR', 'BOILER', 'TRANSFORMER', 'DESALINATION_UNIT', 'PROCESS_HALL', 'SILO', 'SOLAR_ARRAY', 'INVERTER', 'REACTOR_BUILDING')`,
+      `CREATE TYPE "public"."asset_type_enum" AS ENUM('STORAGE_TANK', 'SPHERE_TANK', 'PUMP', 'COMPRESSOR', 'HEAT_EXCHANGER', 'FURNACE', 'COLUMN', 'STACK', 'TURBINE', 'GENERATOR', 'SLUG_CATCHER', 'SULPHUR_RECOVERY_UNIT', 'CRYOGENIC_EXCHANGER', 'LNG_TANK', 'LOADING_JETTY', 'SEPARATOR')`,
     );
     await queryRunner.query(
       `CREATE TYPE "public"."asset_status_enum" AS ENUM('RUNNING', 'STANDBY', 'UNDER_MAINTENANCE')`,
@@ -59,6 +59,12 @@ export class CreateInitialSchema1794602595605 implements MigrationInterface {
       `CREATE INDEX "IDX_392b6e406902d7e3c7dea07806" ON "refresh_token"  ("family_expires_at") `,
     );
     await queryRunner.query(
+      `CREATE TABLE "explorer_progress" ("user_id" uuid NOT NULL, "discovered_plant_ids" character varying array NOT NULL DEFAULT '{}', "inspected_asset_keys" character varying array NOT NULL DEFAULT '{}', "has_opened_globe" boolean NOT NULL DEFAULT false, "experience" integer NOT NULL DEFAULT '0', "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_3b6559caf5ceb01ea9414b88a1e" PRIMARY KEY ("user_id"))`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_e1f9c70e8aa9fea8b6d3f4cdc6" ON "explorer_progress"  ("experience") `,
+    );
+    await queryRunner.query(
       `CREATE TYPE "public"."work_order_type_enum" AS ENUM('PREVENTIVE', 'PREDICTIVE', 'CORRECTIVE')`,
     );
     await queryRunner.query(
@@ -98,6 +104,9 @@ export class CreateInitialSchema1794602595605 implements MigrationInterface {
       `ALTER TABLE "refresh_token" ADD CONSTRAINT "FK_7643a722ca45fb721be1c63dc0c" FOREIGN KEY ("session_id") REFERENCES "auth_session"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "explorer_progress" ADD CONSTRAINT "FK_3b6559caf5ceb01ea9414b88a1e" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "work_order" ADD CONSTRAINT "FK_241e0edfe92c4eb60a9d5b9d9bd" FOREIGN KEY ("asset_id") REFERENCES "asset"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -125,6 +134,9 @@ export class CreateInitialSchema1794602595605 implements MigrationInterface {
       `ALTER TABLE "work_order" DROP CONSTRAINT "FK_241e0edfe92c4eb60a9d5b9d9bd"`,
     );
     await queryRunner.query(
+      `ALTER TABLE "explorer_progress" DROP CONSTRAINT "FK_3b6559caf5ceb01ea9414b88a1e"`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "refresh_token" DROP CONSTRAINT "FK_7643a722ca45fb721be1c63dc0c"`,
     );
     await queryRunner.query(
@@ -143,6 +155,8 @@ export class CreateInitialSchema1794602595605 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "work_order"`);
     await queryRunner.query(`DROP TYPE "public"."work_order_status_enum"`);
     await queryRunner.query(`DROP TYPE "public"."work_order_type_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_e1f9c70e8aa9fea8b6d3f4cdc6"`);
+    await queryRunner.query(`DROP TABLE "explorer_progress"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_392b6e406902d7e3c7dea07806"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_7643a722ca45fb721be1c63dc0"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_6bbe63d2fe75e7f0ba1710351d"`);

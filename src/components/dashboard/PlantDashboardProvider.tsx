@@ -1,15 +1,12 @@
-import { useEffect, useMemo, useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
 import type { ReactNode } from 'react';
 import { SECTOR_ORDER } from '@/constants/dashboard/plantConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { MapFocus } from '@/enums/dashboard/mapFocus';
 import { PlantDashboardContext } from '@/hooks/dashboard/usePlantDashboard';
-import { loadStoredProgress, saveStoredProgress } from '@/lib/dashboard/explorerProgress';
 import type { DashboardAction, DashboardState } from '@/types/dashboard/dashboardTypes';
 
 interface PlantDashboardProviderProperties {
-  /** Whose exploring progress to keep. Progress is saved per user in this browser. */
-  userId: string;
   children: ReactNode;
 }
 
@@ -17,31 +14,21 @@ interface PlantDashboardProviderProperties {
 const STATIONARY_ACTIONS: readonly DashboardActionType[] = [
   DashboardActionType.SET_ACTIVE_SECTORS,
   DashboardActionType.SET_TOURING,
-  DashboardActionType.MARK_GLOBE_OPENED,
-  DashboardActionType.RESET_PROGRESS,
 ];
 
-const createInitialState = (userId: string): DashboardState => ({
-  ...loadStoredProgress(userId),
+const INITIAL_STATE: DashboardState = {
   selectedPlantId: null,
   activeSectors: SECTOR_ORDER,
   focus: MapFocus.WORLD,
   introductionRunCount: 0,
   focusRevision: 0,
   isTouring: false,
-});
+};
 
 const reduceDashboard = (state: DashboardState, action: DashboardAction): DashboardState => {
   switch (action.type) {
     case DashboardActionType.SELECT_PLANT: {
-      return {
-        ...state,
-        selectedPlantId: action.plantId,
-        focus: MapFocus.PLANT,
-        discoveredPlantIds: state.discoveredPlantIds.includes(action.plantId)
-          ? state.discoveredPlantIds
-          : [...state.discoveredPlantIds, action.plantId],
-      };
+      return { ...state, selectedPlantId: action.plantId, focus: MapFocus.PLANT };
     }
     case DashboardActionType.CLEAR_SELECTION: {
       return { ...state, selectedPlantId: null, focus: MapFocus.UAE, isTouring: false };
@@ -64,12 +51,6 @@ const reduceDashboard = (state: DashboardState, action: DashboardAction): Dashbo
     case DashboardActionType.SET_TOURING: {
       return { ...state, isTouring: action.isTouring };
     }
-    case DashboardActionType.MARK_GLOBE_OPENED: {
-      return state.hasOpenedGlobe ? state : { ...state, hasOpenedGlobe: true };
-    }
-    case DashboardActionType.RESET_PROGRESS: {
-      return { ...state, discoveredPlantIds: [], hasOpenedGlobe: false, isTouring: false };
-    }
   }
 };
 
@@ -80,15 +61,10 @@ const dashboardReducer = (state: DashboardState, action: DashboardAction): Dashb
     : { ...nextState, focusRevision: state.focusRevision + 1 };
 };
 
-export const PlantDashboardProvider = ({ userId, children }: PlantDashboardProviderProperties) => {
-  const [state, dispatch] = useReducer(dashboardReducer, userId, createInitialState);
+export const PlantDashboardProvider = ({ children }: PlantDashboardProviderProperties) => {
+  const [state, dispatch] = useReducer(dashboardReducer, INITIAL_STATE);
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state]);
-  const { discoveredPlantIds, hasOpenedGlobe } = state;
-
-  useEffect(() => {
-    saveStoredProgress(userId, { discoveredPlantIds, hasOpenedGlobe });
-  }, [userId, discoveredPlantIds, hasOpenedGlobe]);
 
   return <PlantDashboardContext value={contextValue}>{children}</PlantDashboardContext>;
 };

@@ -1,14 +1,14 @@
 import { ProgressRing } from '@/components/dashboard/ProgressRing';
 import { Progress } from '@/components/ui/progress';
-import { EXPLORER_COPY, RANKS } from '@/constants/dashboard/explorerConstants';
+import { EXPLORER_COPY, RANK_PRESENTATION } from '@/constants/dashboard/explorerConstants';
 import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 
 /** The explorer's standing at a glance: plants discovered, rank and progress to the next one. */
 export const ExplorerSummary = () => {
   const progress = useExplorerProgress();
 
-  const rankLabel = RANKS.find((definition) => definition.rank === progress.rank)?.label;
-  const nextRankLabel = RANKS.find((definition) => definition.rank === progress.nextRank)?.label;
+  const rankLabel = RANK_PRESENTATION[progress.rank].label;
+  const nextRankLabel = progress.nextRank ? RANK_PRESENTATION[progress.nextRank].label : undefined;
 
   return (
     <section className="flex items-center gap-4 border-b p-4">

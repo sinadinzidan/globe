@@ -16,5 +16,6 @@ The setup, the roles and the security model are described in the [project README
 | `npm run test:e2e`                                  | Run the security and access tests against a test database           |
 | `npm run lint`, `typecheck`, `format:check`         | The checks CI runs                                                  |
 
-Each feature is a module under `src/`: `auth`, `user`, `role`, `plant`, `asset` and `work-order`.
+Each feature is a module under `src/`: `auth`, `user`, `role`, `plant`, `asset`, `work-order` and
+`explorer`.
 Code shared between modules is in `src/common/`.

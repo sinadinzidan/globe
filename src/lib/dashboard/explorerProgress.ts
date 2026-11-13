@@ -1,82 +1,14 @@
 import { geoDistance } from 'd3-geo';
-import {
-  ACHIEVEMENT_EXPERIENCE,
-  DISCOVERY_EXPERIENCE,
-  PERCENT,
-  PROGRESS_STORAGE_KEY,
-  RANKS,
-  SECTOR_ACHIEVEMENT,
-} from '@/constants/dashboard/explorerConstants';
-import { SECTOR_ORDER } from '@/constants/dashboard/plantConstants';
-import { AchievementId } from '@/enums/dashboard/achievementId';
-import type { StoredProgress } from '@/types/dashboard/dashboardTypes';
-import type { AchievementStatus, ExplorerProgress } from '@/types/dashboard/explorerTypes';
+import { ConnectionDirection } from '@/enums/dashboard/connectionDirection';
+import type { Asset } from '@/types/dashboard/assetTypes';
 import type { GeographicPoint } from '@/types/dashboard/mapTypes';
 import type { Plant } from '@/types/dashboard/plantTypes';
 
-const EMPTY_PROGRESS: StoredProgress = { discoveredPlantIds: [], hasOpenedGlobe: false };
-const STRING_TYPE = 'string';
+const ASSET_KEY_SEPARATOR = '/';
 
-const toStatus = (id: AchievementId, current: number, total: number): AchievementStatus => ({
-  id,
-  current,
-  total,
-  isUnlocked: total > 0 && current >= total,
-});
-
-const evaluateAchievements = (plants: Plant[], progress: StoredProgress) => {
-  const discovered = plants.filter((plant) => progress.discoveredPlantIds.includes(plant.id));
-  const emirates = new Set(plants.map((plant) => plant.emirate));
-  const discoveredEmirates = new Set(discovered.map((plant) => plant.emirate));
-  const countSector = (list: Plant[], sector: Plant['sector']) =>
-    list.filter((plant) => plant.sector === sector).length;
-
-  return [
-    toStatus(AchievementId.FIRST_DISCOVERY, Math.min(discovered.length, 1), 1),
-    ...SECTOR_ORDER.map((sector) =>
-      toStatus(
-        SECTOR_ACHIEVEMENT[sector],
-        countSector(discovered, sector),
-        countSector(plants, sector),
-      ),
-    ),
-    toStatus(AchievementId.EVERY_EMIRATE, discoveredEmirates.size, emirates.size),
-    toStatus(AchievementId.GLOBE_VIEW, Number(progress.hasOpenedGlobe), 1),
-    toStatus(AchievementId.FULL_SURVEY, discovered.length, plants.length),
-  ];
-};
-
-/** Everything the explorer has earned, worked out from what has been discovered. */
-export const computeExplorerProgress = (
-  plants: Plant[],
-  progress: StoredProgress,
-): ExplorerProgress => {
-  const achievements = evaluateAchievements(plants, progress);
-  const unlockedCount = achievements.filter((achievement) => achievement.isUnlocked).length;
-  const discoveredCount = achievements.at(-1)?.current ?? 0;
-  const experience =
-    discoveredCount * DISCOVERY_EXPERIENCE + unlockedCount * ACHIEVEMENT_EXPERIENCE;
-
-  const rankIndex = RANKS.findLastIndex((definition) => experience >= definition.threshold);
-  const current = RANKS[Math.max(rankIndex, 0)];
-  const next = RANKS.at(rankIndex + 1);
-  const isHighestRank = rankIndex === RANKS.length - 1;
-  const span = isHighestRank || !next ? 0 : next.threshold - current.threshold;
-
-  return {
-    discoveredCount,
-    totalCount: plants.length,
-    achievements,
-    unlockedCount,
-    experience,
-    rank: current.rank,
-    level: rankIndex + 1,
-    nextRank: isHighestRank ? undefined : next?.rank,
-    experienceToNextRank: span > 0 && next ? next.threshold - experience : 0,
-    rankProgressPercent:
-      span > 0 ? Math.round(((experience - current.threshold) / span) * PERCENT) : PERCENT,
-  };
-};
+/** How the API names an inspected asset. */
+export const toAssetKey = (plantId: string, assetId: string) =>
+  `${plantId}${ASSET_KEY_SEPARATOR}${assetId}`;
 
 const distanceBetween = (first: GeographicPoint, second: GeographicPoint) =>
   geoDistance([first.longitude, first.latitude], [second.longitude, second.latitude]);
@@ -105,32 +37,24 @@ export const findNextPlant = (
     : undefined;
 };
 
-/** Reads a user's saved progress, ignoring anything that is missing or not in the expected shape. */
-const toStorageKey = (userId: string) => `${PROGRESS_STORAGE_KEY}.${userId}`;
-
-export const loadStoredProgress = (userId: string): StoredProgress => {
-  try {
-    const stored: unknown = JSON.parse(window.localStorage.getItem(toStorageKey(userId)) ?? '');
-    const candidate = stored as Partial<StoredProgress> | null;
-    if (!candidate || !Array.isArray(candidate.discoveredPlantIds)) {
-      return EMPTY_PROGRESS;
-    }
-    return {
-      discoveredPlantIds: candidate.discoveredPlantIds.filter(
-        (plantId): plantId is string => typeof plantId === STRING_TYPE,
-      ),
-      hasOpenedGlobe: Boolean(candidate.hasOpenedGlobe),
-    };
-  } catch {
-    return EMPTY_PROGRESS;
-  }
-};
-
-/** Saves a user's progress. Storage can be unavailable, in which case progress lasts for the visit only. */
-export const saveStoredProgress = (userId: string, progress: StoredProgress) => {
-  try {
-    window.localStorage.setItem(toStorageKey(userId), JSON.stringify(progress));
-  } catch {
-    // Nothing to do: the dashboard works the same without saved progress.
-  }
+/**
+ * The asset to inspect next. From an asset, the story follows the process: the first downstream
+ * asset that has not been inspected. Otherwise, any asset of the plant that has not been.
+ */
+export const findNextAsset = (
+  assets: Asset[],
+  inspectedAssetIds: string[],
+  currentAsset?: Asset,
+) => {
+  const isOpen = (asset: Asset) =>
+    !inspectedAssetIds.includes(asset.id) && asset.id !== currentAsset?.id;
+  const downstreamIds =
+    currentAsset?.connections
+      .filter((connection) => connection.direction === ConnectionDirection.DOWNSTREAM)
+      .map((connection) => connection.assetId) ?? [];
+  const downstream = assets.find((asset) => downstreamIds.includes(asset.id) && isOpen(asset));
+  return {
+    nextAsset: downstream ?? assets.find((asset) => isOpen(asset)),
+    isDownstream: Boolean(downstream),
+  };
 };

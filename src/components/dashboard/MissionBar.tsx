@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { EXPLORER_COPY, TOUR_DWELL_MILLISECONDS } from '@/constants/dashboard/explorerConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
+import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { useNextPlant } from '@/hooks/dashboard/useNextPlant';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 
@@ -10,8 +11,9 @@ import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 export const MissionBar = () => {
   const { state, dispatch } = usePlantDashboard();
   const { nextPlant, isNextPlantNew } = useNextPlant();
+  const { discoveredCount } = useExplorerProgress();
 
-  const hasStarted = state.discoveredPlantIds.length > 0;
+  const hasStarted = discoveredCount > 0;
   const newPlantLabel = hasStarted ? EXPLORER_COPY.EXPLORE_NEXT : EXPLORER_COPY.START_EXPLORING;
   const actionLabel = isNextPlantNew ? newPlantLabel : EXPLORER_COPY.NEXT_PLANT;
   const tourLabel = state.isTouring ? EXPLORER_COPY.STOP_TOUR : EXPLORER_COPY.START_TOUR;

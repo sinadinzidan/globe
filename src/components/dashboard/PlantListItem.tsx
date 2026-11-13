@@ -1,7 +1,9 @@
 import { CircleCheck } from 'lucide-react';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
+import { SECTOR_PRESENTATION } from '@/constants/dashboard/plantConstants';
 import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
+import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { cn } from '@/lib/utils';
 import type { Plant } from '@/types/dashboard/plantTypes';
@@ -12,9 +14,10 @@ interface PlantListItemProperties {
 
 export const PlantListItem = ({ plant }: PlantListItemProperties) => {
   const { state, dispatch } = usePlantDashboard();
+  const { discoveredPlantIds } = useExplorerProgress();
 
   const isSelected = state.selectedPlantId === plant.id;
-  const isDiscovered = state.discoveredPlantIds.includes(plant.id);
+  const isDiscovered = discoveredPlantIds.includes(plant.id);
 
   const handleSelect = () => {
     dispatch(
@@ -38,7 +41,9 @@ export const PlantListItem = ({ plant }: PlantListItemProperties) => {
         <SectorBadge sector={plant.sector} isMuted={!isDiscovered} />
         <span className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-sm font-medium">{plant.name}</span>
-          <span className="truncate text-xs text-muted-foreground">{plant.operator}</span>
+          <span className="truncate text-xs text-muted-foreground">
+            {SECTOR_PRESENTATION[plant.sector].label}
+          </span>
         </span>
         {isDiscovered && (
           <CircleCheck

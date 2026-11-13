@@ -4,10 +4,9 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
 import { GLOBE } from '@/constants/dashboard/globe/globeConstants';
-import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { useIntroduction } from '@/hooks/dashboard/useIntroduction';
 import { useMapData } from '@/hooks/dashboard/useMapData';
-import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
+import { useExplorerActions, useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import type { ZoomCommand } from '@/types/dashboard/globe/globeTypes';
 
 // The 3D renderer is large, so it is only downloaded when the globe is opened.
@@ -17,7 +16,8 @@ const INITIAL_ZOOM_COMMAND: ZoomCommand = { factor: 1, sequence: 0 };
 
 export const GlobeView = () => {
   const { data: mapData, isPending, isError, refetch } = useMapData();
-  const { dispatch } = usePlantDashboard();
+  const { isReady, hasOpenedGlobe } = useExplorerProgress();
+  const { markGlobeOpened } = useExplorerActions();
 
   const [zoomCommand, setZoomCommand] = useState(INITIAL_ZOOM_COMMAND);
 
@@ -40,8 +40,10 @@ export const GlobeView = () => {
   useIntroduction(Boolean(mapData));
 
   useEffect(() => {
-    dispatch({ type: DashboardActionType.MARK_GLOBE_OPENED });
-  }, [dispatch]);
+    if (isReady && !hasOpenedGlobe) {
+      markGlobeOpened();
+    }
+  }, [isReady, hasOpenedGlobe, markGlobeOpened]);
 
   if (isPending) {
     return <LoadingState message={DASHBOARD_COPY.LOADING_MAP} />;

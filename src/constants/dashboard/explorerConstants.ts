@@ -1,26 +1,30 @@
 import {
   Award,
+  ClipboardCheck,
   Compass,
   Crown,
+  Drill,
   Earth,
   Factory,
   Flag,
   Flame,
   HardHat,
-  MapPinned,
-  Sun,
+  Network,
+  ScanSearch,
   Telescope,
   Trophy,
-  Zap,
+  Waypoints,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { AchievementId } from '@/enums/dashboard/achievementId';
 import { ExplorerRank } from '@/enums/dashboard/explorerRank';
-import { PlantSector } from '@/enums/dashboard/plantSector';
 
-export const PROGRESS_STORAGE_KEY = 'globe.explorer-progress';
-
+/**
+ * Experience shown next to what earns it. The API awards the experience; these only label the
+ * interface and have to match `backend/src/explorer/constants/explorer.constant.ts`.
+ */
 export const DISCOVERY_EXPERIENCE = 100;
+export const INSPECTION_EXPERIENCE = 25;
 export const ACHIEVEMENT_EXPERIENCE = 250;
 export const PERCENT = 100;
 
@@ -28,22 +32,18 @@ export const PERCENT = 100;
 export const TOUR_DWELL_MILLISECONDS = 5200;
 export const TOAST_DURATION_MILLISECONDS = 4500;
 
-interface RankDefinition {
-  rank: ExplorerRank;
+interface RankPresentation {
   label: string;
   icon: LucideIcon;
-  /** Experience needed to reach the rank. */
-  threshold: number;
 }
 
-/** Ordered from the first rank to the last. */
-export const RANKS: readonly RankDefinition[] = [
-  { rank: ExplorerRank.SCOUT, label: 'Scout', icon: Compass, threshold: 0 },
-  { rank: ExplorerRank.SURVEYOR, label: 'Surveyor', icon: Telescope, threshold: 500 },
-  { rank: ExplorerRank.FIELD_ENGINEER, label: 'Field Engineer', icon: HardHat, threshold: 1400 },
-  { rank: ExplorerRank.PLANT_MANAGER, label: 'Plant Manager', icon: Award, threshold: 2600 },
-  { rank: ExplorerRank.DIRECTOR, label: 'Director', icon: Crown, threshold: 4000 },
-];
+export const RANK_PRESENTATION: Record<ExplorerRank, RankPresentation> = {
+  [ExplorerRank.SCOUT]: { label: 'Scout', icon: Compass },
+  [ExplorerRank.SURVEYOR]: { label: 'Surveyor', icon: Telescope },
+  [ExplorerRank.FIELD_ENGINEER]: { label: 'Field Engineer', icon: HardHat },
+  [ExplorerRank.PLANT_MANAGER]: { label: 'Plant Manager', icon: Award },
+  [ExplorerRank.DIRECTOR]: { label: 'Director', icon: Crown },
+};
 
 interface AchievementPresentation {
   title: string;
@@ -57,30 +57,45 @@ export const ACHIEVEMENT_PRESENTATION: Record<AchievementId, AchievementPresenta
     description: 'Discover your first plant.',
     icon: Flag,
   },
-  [AchievementId.OIL_GAS_AND_CHEMICALS_COMPLETE]: {
-    title: 'Hydrocarbon specialist',
-    description: 'Discover every oil, gas and chemicals plant.',
+  [AchievementId.GAS_COMPLETE]: {
+    title: 'Gas master',
+    description: 'Discover every gas plant.',
     icon: Flame,
   },
-  [AchievementId.POWER_AND_WATER_COMPLETE]: {
-    title: 'Grid keeper',
-    description: 'Discover every power and water plant.',
-    icon: Zap,
+  [AchievementId.UPSTREAM_COMPLETE]: {
+    title: 'Wellhead to terminal',
+    description: 'Discover every upstream site.',
+    icon: Drill,
   },
-  [AchievementId.METALS_COMPLETE]: {
-    title: 'Metalworker',
-    description: 'Discover every metals plant.',
+  [AchievementId.REFINING_AND_CHEMICALS_COMPLETE]: {
+    title: 'Downstream specialist',
+    description: 'Discover every refining and chemicals plant.',
     icon: Factory,
   },
-  [AchievementId.CLEAN_ENERGY_COMPLETE]: {
-    title: 'Clean sweep',
-    description: 'Discover every clean energy plant.',
-    icon: Sun,
+  [AchievementId.EVERY_COMPANY]: {
+    title: 'One group',
+    description: 'Discover a plant of every company in the group.',
+    icon: Network,
   },
-  [AchievementId.EVERY_EMIRATE]: {
-    title: 'Coast to coast',
-    description: 'Discover a plant in every emirate on the map.',
-    icon: MapPinned,
+  [AchievementId.GAS_VALUE_CHAIN]: {
+    title: 'Follow the gas',
+    description: 'Visit each stage of the gas value chain: processing, NGL fractionation and LNG.',
+    icon: Waypoints,
+  },
+  [AchievementId.FIRST_INSPECTION]: {
+    title: 'Hands on',
+    description: 'Inspect your first asset.',
+    icon: ScanSearch,
+  },
+  [AchievementId.PLANT_SURVEYED]: {
+    title: 'Plant surveyed',
+    description: 'Inspect every asset of one plant.',
+    icon: ClipboardCheck,
+  },
+  [AchievementId.ASSET_SPECIALIST]: {
+    title: 'Asset specialist',
+    description: 'Inspect 25 assets.',
+    icon: HardHat,
   },
   [AchievementId.GLOBE_VIEW]: {
     title: 'Orbital view',
@@ -92,13 +107,6 @@ export const ACHIEVEMENT_PRESENTATION: Record<AchievementId, AchievementPresenta
     description: 'Discover every plant.',
     icon: Trophy,
   },
-};
-
-export const SECTOR_ACHIEVEMENT: Record<PlantSector, AchievementId> = {
-  [PlantSector.OIL_GAS_AND_CHEMICALS]: AchievementId.OIL_GAS_AND_CHEMICALS_COMPLETE,
-  [PlantSector.POWER_AND_WATER]: AchievementId.POWER_AND_WATER_COMPLETE,
-  [PlantSector.METALS]: AchievementId.METALS_COMPLETE,
-  [PlantSector.CLEAN_ENERGY]: AchievementId.CLEAN_ENERGY_COMPLETE,
 };
 
 /** Geometry of the circular progress indicator, in its own view box units. */
@@ -143,6 +151,22 @@ export const EXPLORER_COPY = {
   RESET_CONFIRM: 'Reset progress',
   RESET_CANCEL: 'Keep progress',
   SHORTCUT_NEXT: 'N',
+  INSPECTED: 'inspected',
+  INSPECTED_BADGE: 'Inspected',
+  ASSETS_PROGRESS_LABEL: 'Assets inspected in this plant',
+  INSPECT_NEXT: 'Inspect next',
+  CONTINUE_PROCESS: 'Next in the process',
+  NEXT_ASSET: 'Next asset',
+  PLANT_SURVEYED: 'Every asset inspected',
+  PROFILE_TITLE: 'Explorer profile',
+  PROFILE_DESCRIPTION: 'Your rank, your achievements and how you compare.',
+  PROFILE_LINK_LABEL: 'Open your explorer profile',
+  ACHIEVEMENTS_TITLE: 'Achievements',
+  LEADERBOARD_TITLE: 'Leaderboard',
+  LEADERBOARD_DESCRIPTION: 'The explorers with the most experience.',
+  LEADERBOARD_EMPTY_TITLE: 'Nobody on the board yet',
+  LEADERBOARD_EMPTY_DESCRIPTION: 'Discover a plant to be the first.',
+  YOU: 'You',
 } as const;
 
 /** Keyboard shortcuts, compared against `KeyboardEvent.key` in lower case. */

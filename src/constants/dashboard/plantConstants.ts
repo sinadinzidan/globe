@@ -1,4 +1,4 @@
-import { Factory, Flame, Sun, Zap } from 'lucide-react';
+import { Drill, Factory, Flame } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Emirate } from '@/enums/dashboard/emirate';
 import { PlantSector } from '@/enums/dashboard/plantSector';
@@ -14,37 +14,29 @@ interface SectorPresentation {
 }
 
 export const SECTOR_PRESENTATION: Record<PlantSector, SectorPresentation> = {
-  [PlantSector.OIL_GAS_AND_CHEMICALS]: {
-    label: 'Oil, gas and chemicals',
+  [PlantSector.GAS]: {
+    label: 'Gas',
     icon: Flame,
     fillClassName: 'fill-chart-1',
     strokeClassName: 'stroke-chart-1',
     textClassName: 'text-chart-1',
     backgroundClassName: 'bg-chart-1',
   },
-  [PlantSector.POWER_AND_WATER]: {
-    label: 'Power and water',
-    icon: Zap,
+  [PlantSector.UPSTREAM]: {
+    label: 'Upstream',
+    icon: Drill,
     fillClassName: 'fill-chart-2',
     strokeClassName: 'stroke-chart-2',
     textClassName: 'text-chart-2',
     backgroundClassName: 'bg-chart-2',
   },
-  [PlantSector.METALS]: {
-    label: 'Metals',
+  [PlantSector.REFINING_AND_CHEMICALS]: {
+    label: 'Refining and chemicals',
     icon: Factory,
     fillClassName: 'fill-chart-3',
     strokeClassName: 'stroke-chart-3',
     textClassName: 'text-chart-3',
     backgroundClassName: 'bg-chart-3',
-  },
-  [PlantSector.CLEAN_ENERGY]: {
-    label: 'Clean energy',
-    icon: Sun,
-    fillClassName: 'fill-chart-4',
-    strokeClassName: 'stroke-chart-4',
-    textClassName: 'text-chart-4',
-    backgroundClassName: 'bg-chart-4',
   },
 };
 
@@ -66,3 +58,6 @@ export const COORDINATE_FRACTION_DIGITS = 2;
 
 /** Emirates large enough for their name to fit at the country-wide zoom level. */
 export const LARGE_EMIRATES: readonly Emirate[] = [Emirate.ABU_DHABI, Emirate.DUBAI];
+
+/** The company the dashboard is centred on. Its plants are listed first. */
+export const FEATURED_OPERATOR = 'ADNOC Gas';

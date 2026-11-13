@@ -1119,6 +1119,255 @@
           "work-orders"
         ]
       }
+    },
+    "/api/explorer/progress": {
+      "get": {
+        "operationId": "explorerGetProgress",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplorerProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Your discoveries, experience, rank and achievements. Any signed-in user.",
+        "tags": [
+          "explorer"
+        ]
+      },
+      "delete": {
+        "operationId": "explorerReset",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplorerProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Clear your own progress. Any signed-in user.",
+        "tags": [
+          "explorer"
+        ]
+      }
+    },
+    "/api/explorer/plants/{plantId}": {
+      "post": {
+        "operationId": "explorerDiscoverPlant",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplorerProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Record that you opened a plant. Needs access to the plant.",
+        "tags": [
+          "explorer"
+        ]
+      }
+    },
+    "/api/explorer/plants/{plantId}/assets/{assetId}": {
+      "post": {
+        "operationId": "explorerInspectAsset",
+        "parameters": [
+          {
+            "name": "plantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplorerProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "404": {
+            "description": "There is no such plant or asset, or you have no access to the plant."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Record that you opened an asset. Needs access to its plant.",
+        "tags": [
+          "explorer"
+        ]
+      }
+    },
+    "/api/explorer/globe": {
+      "post": {
+        "operationId": "explorerMarkGlobeOpened",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExplorerProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "Record that you opened the 3D globe. Any signed-in user.",
+        "tags": [
+          "explorer"
+        ]
+      }
+    },
+    "/api/explorer/leaderboard": {
+      "get": {
+        "operationId": "explorerGetLeaderboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LeaderboardEntryDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "The required request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The explorers with the most experience: names and standing only. Any signed-in user.",
+        "tags": [
+          "explorer"
+        ]
+      }
     }
   },
   "info": {
@@ -1498,10 +1747,9 @@
       "PlantSector": {
         "type": "string",
         "enum": [
-          "OIL_GAS_AND_CHEMICALS",
-          "POWER_AND_WATER",
-          "METALS",
-          "CLEAN_ENERGY"
+          "GAS",
+          "UPSTREAM",
+          "REFINING_AND_CHEMICALS"
         ]
       },
       "Emirate": {
@@ -1519,11 +1767,11 @@
       "PlantModel": {
         "type": "string",
         "enum": [
+          "GAS_PROCESSING_PLANT",
+          "NGL_FRACTIONATION_PLANT",
+          "LNG_PLANT",
           "PROCESS_PLANT",
-          "POWER_AND_WATER_PLANT",
-          "METALS_PLANT",
-          "SOLAR_PARK",
-          "NUCLEAR_PLANT"
+          "OIL_PRODUCTION_FACILITY"
         ]
       },
       "PlantDto": {
@@ -1640,14 +1888,12 @@
           "STACK",
           "TURBINE",
           "GENERATOR",
-          "BOILER",
-          "TRANSFORMER",
-          "DESALINATION_UNIT",
-          "PROCESS_HALL",
-          "SILO",
-          "SOLAR_ARRAY",
-          "INVERTER",
-          "REACTOR_BUILDING"
+          "SLUG_CATCHER",
+          "SULPHUR_RECOVERY_UNIT",
+          "CRYOGENIC_EXCHANGER",
+          "LNG_TANK",
+          "LOADING_JETTY",
+          "SEPARATOR"
         ]
       },
       "AssetStatus": {
@@ -2180,6 +2426,194 @@
             "description": "Send null to clear it."
           }
         }
+      },
+      "AchievementId": {
+        "type": "string",
+        "enum": [
+          "FIRST_DISCOVERY",
+          "GAS_COMPLETE",
+          "UPSTREAM_COMPLETE",
+          "REFINING_AND_CHEMICALS_COMPLETE",
+          "EVERY_COMPANY",
+          "GAS_VALUE_CHAIN",
+          "FIRST_INSPECTION",
+          "PLANT_SURVEYED",
+          "ASSET_SPECIALIST",
+          "GLOBE_VIEW",
+          "FULL_SURVEY"
+        ]
+      },
+      "AchievementStatusDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AchievementId"
+              }
+            ]
+          },
+          "current": {
+            "type": "number",
+            "description": "How far along the achievement is."
+          },
+          "total": {
+            "type": "number",
+            "description": "What it takes to unlock it."
+          },
+          "isUnlocked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "current",
+          "total",
+          "isUnlocked"
+        ]
+      },
+      "ExplorerRank": {
+        "type": "string",
+        "enum": [
+          "SCOUT",
+          "SURVEYOR",
+          "FIELD_ENGINEER",
+          "PLANT_MANAGER",
+          "DIRECTOR"
+        ]
+      },
+      "ExplorerProgressDto": {
+        "type": "object",
+        "properties": {
+          "discoveredPlantIds": {
+            "example": [
+              "habshan-gas-complex"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inspectedAssetKeys": {
+            "description": "Inspected assets, each as `plantId/assetId`.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hasOpenedGlobe": {
+            "type": "boolean"
+          },
+          "discoveredCount": {
+            "type": "number",
+            "description": "Plants discovered, among those the user can reach."
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "Plants the user can reach."
+          },
+          "inspectedCount": {
+            "type": "number",
+            "description": "Assets inspected, among those the user can reach."
+          },
+          "assetCount": {
+            "type": "number",
+            "description": "Assets the user can reach."
+          },
+          "achievements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AchievementStatusDto"
+            }
+          },
+          "unlockedCount": {
+            "type": "number"
+          },
+          "experience": {
+            "type": "number"
+          },
+          "rank": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExplorerRank"
+              }
+            ]
+          },
+          "level": {
+            "type": "number",
+            "description": "One-based position of the rank."
+          },
+          "nextRank": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExplorerRank"
+              }
+            ]
+          },
+          "experienceToNextRank": {
+            "type": "number"
+          },
+          "rankProgressPercent": {
+            "type": "number",
+            "description": "Progress through the current rank, from 0 to 100."
+          }
+        },
+        "required": [
+          "discoveredPlantIds",
+          "inspectedAssetKeys",
+          "hasOpenedGlobe",
+          "discoveredCount",
+          "totalCount",
+          "inspectedCount",
+          "assetCount",
+          "achievements",
+          "unlockedCount",
+          "experience",
+          "rank",
+          "level",
+          "nextRank",
+          "experienceToNextRank",
+          "rankProgressPercent"
+        ]
+      },
+      "LeaderboardEntryDto": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "number",
+            "description": "Position on the board, starting at 1."
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Reem Reliability"
+          },
+          "experience": {
+            "type": "number"
+          },
+          "rank": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExplorerRank"
+              }
+            ]
+          },
+          "level": {
+            "type": "number"
+          },
+          "isCurrentUser": {
+            "type": "boolean",
+            "description": "Whether this entry is the signed-in user."
+          }
+        },
+        "required": [
+          "position",
+          "fullName",
+          "experience",
+          "rank",
+          "level",
+          "isCurrentUser"
+        ]
       }
     }
   }

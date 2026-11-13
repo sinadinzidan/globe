@@ -1,7 +1,36 @@
-# Globe
+# Globe · ADNOC Asset Explorer
 
-An animated dashboard of industrial plants in the United Arab Emirates, drawn on an outlined world
-map. It opens on the whole world, flies to the UAE, and drops the plants in at their locations.
+A gamified explorer of ADNOC group sites, centred on ADNOC Gas. It opens on the world, flies to the
+UAE, and leads from the map into each plant in 3D and down to its assets, with access controlled
+by role.
+
+> **The content is illustrative.** The sites are real, publicly known ADNOC facilities, but their
+> positions are approximate, and the 3D layouts, assets, readings, work orders, inspections and
+> documents are generated samples, not ADNOC records. This project is not affiliated with or
+> endorsed by ADNOC. Replace the files in `backend/seed-data/` with real data before relying on it.
+
+## The portfolio
+
+| Company        | Sites                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| ADNOC Gas      | Habshan complex, Habshan 5, Bab, Asab and Bu Hasa gas plants, Ruwais NGL fractionation, Das Island LNG |
+| ADNOC Sour Gas | Shah gas plant                                                                                         |
+| ADNOC Onshore  | Bu Hasa field, Jebel Dhanna terminal, Fujairah oil terminal                                            |
+| ADNOC Offshore | Zirku Island, Upper Zakum                                                                              |
+| ADNOC Refining | Ruwais refinery                                                                                        |
+| Borouge        | Ruwais petrochemical complex                                                                           |
+| Fertiglobe     | Ruwais fertilizer plant                                                                                |
+
+Each plant is shown with one of five representative layouts. The three gas ones follow the gas
+value chain:
+
+- **Gas processing** (Habshan and the field gas plants): slug catcher, inlet separator, amine
+  absorber, dehydration, gas chiller, demethaniser, residue gas compressor, sulphur recovery, NGL
+  sphere and flare.
+- **NGL fractionation** (Ruwais): feed sphere, deethaniser, depropaniser, debutaniser, ethane
+  compressor, product spheres and a loading jetty.
+- **LNG** (Das Island): gas treatment, main cryogenic heat exchanger, refrigerant compressors, LNG
+  tanks, boil-off compressor, loading pump and jetty.
 
 ## The journey
 
@@ -36,19 +65,25 @@ sectors).
 
 ## Exploring
 
-The dashboard is built as a game of discovery:
+The whole journey is a game of discovery, and progress is kept on the server for each user:
 
-- **Discover plants.** Plants start as outlines. Opening one fills it in and earns experience.
-- **Explore next** sends the map to the nearest undiscovered plant (shortcut: `N`; `Esc` steps back).
-  The play button beside it runs a **guided tour** that moves from plant to plant by itself.
-- **Ranks.** Experience raises the explorer from Scout to Director.
-- **Achievements** are unlocked by completing a sector, reaching every emirate, opening the globe
-  and discovering everything.
+- **Discover plants.** Plants start as outlines on the map. Opening one fills it in.
+- **Inspect assets.** Opening an asset's page inspects it. In a plant, **Inspect next** moves in on
+  the next asset; on an asset page, **Next in the process** follows the flow downstream, from the
+  slug catcher to the sales gas compressor.
+- **Explore next** on the map goes to the nearest undiscovered plant (shortcut `N`), and the play
+  button runs a guided tour.
+- **Experience and ranks.** A plant earns 100 XP, an asset 25, an achievement 250, taking the
+  explorer from Scout to Director.
+- **Achievements** include _Follow the gas_ (visit each stage of the gas value chain), _Gas
+  master_ (every gas plant), _Plant surveyed_ (every asset of one plant) and _One group_ (a plant
+  of every company). Only plants a user can reach count, so everyone can complete their own set.
+- **Explorer profile** (the chip in the header) shows rank, achievements and a leaderboard of
+  names and experience.
 
-Progress is saved in the browser (`localStorage`) and can be reset from the Achievements tab.
-Experience values, ranks and achievements are defined in
-`src/constants/dashboard/explorerConstants.ts`; the rules are in
-`src/lib/dashboard/explorerProgress.ts`.
+The rules are in `backend/src/explorer/`: experience values, ranks and missions in
+`constants/explorer.constant.ts`, the evaluation in `utilities/explorer-rules.utility.ts`. The
+labels and icons shown for them are in `src/constants/dashboard/explorerConstants.ts`.
 
 ## Running it
 
@@ -77,15 +112,15 @@ one origin and the session cookies are first-party. Serve them from one origin i
 
 Seeding creates one account per role, all with the password you set as `SEED_PASSWORD`:
 
-| Email                                | Role                 | Plants                          |
-| ------------------------------------ | -------------------- | ------------------------------- |
-| `administrator@globe.example`        | Administrator        | Every plant                     |
-| `plant.manager@globe.example`        | Plant manager        | The three Ruwais plants         |
-| `reliability.engineer@globe.example` | Reliability engineer | Every plant                     |
-| `maintenance.planner@globe.example`  | Maintenance planner  | Ruwais Refinery, Habshan        |
-| `inspector@globe.example`            | Inspector            | Two Jebel Ali plants, MBR Solar |
-| `operator@globe.example`             | Operator             | Ruwais Refinery                 |
-| `viewer@globe.example`               | Viewer               | Barakah, Noor Abu Dhabi         |
+| Email                                | Role                 | Plants                     |
+| ------------------------------------ | -------------------- | -------------------------- |
+| `administrator@globe.example`        | Administrator        | Every plant                |
+| `plant.manager@globe.example`        | Plant manager        | The three Ruwais plants    |
+| `reliability.engineer@globe.example` | Reliability engineer | Every plant                |
+| `maintenance.planner@globe.example`  | Maintenance planner  | Ruwais Refinery, Habshan   |
+| `inspector@globe.example`            | Inspector            | Das Island LNG, Ruwais NGL |
+| `operator@globe.example`             | Operator             | Ruwais Refinery            |
+| `viewer@globe.example`               | Viewer               | Barakah, Noor Abu Dhabi    |
 
 | Script                   | Purpose                                                    |
 | ------------------------ | ---------------------------------------------------------- |

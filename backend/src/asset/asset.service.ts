@@ -57,6 +57,21 @@ export class AssetService {
     return (await this.loadAccessible(user, plantId, assetCode)).documents;
   }
 
+  /** How many assets each of the given plants has. */
+  async countByPlant(plantIds: string[]) {
+    if (plantIds.length === 0) {
+      return new Map<string, number>();
+    }
+    const rows = await this.assetRepository
+      .createQueryBuilder('asset')
+      .select('asset.plantId', 'plantId')
+      .addSelect('COUNT(*)', 'count')
+      .where('asset.plantId IN (:...plantIds)', { plantIds })
+      .groupBy('asset.plantId')
+      .getRawMany<{ plantId: string; count: string }>();
+    return new Map(rows.map((row) => [row.plantId, Number(row.count)]));
+  }
+
   /** The asset, once the user's access to its plant has been checked. */
   async loadAccessible(user: AuthenticatedUser, plantId: string, assetCode: string) {
     await this.plantService.loadAccessible(user, plantId);

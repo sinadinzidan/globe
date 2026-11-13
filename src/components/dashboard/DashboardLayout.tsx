@@ -16,7 +16,7 @@ export const DashboardLayout = () => {
   }
 
   return (
-    <PlantDashboardProvider key={user.id} userId={user.id}>
+    <PlantDashboardProvider key={user.id}>
       <TooltipProvider>
         <div className="flex min-h-svh flex-col lg:h-svh">
           <DashboardHeader />

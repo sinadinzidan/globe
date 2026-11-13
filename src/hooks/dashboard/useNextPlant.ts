@@ -1,4 +1,5 @@
 import { UAE_CENTRE } from '@/constants/dashboard/mapConstants';
+import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
 import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
 import { useVisiblePlants } from '@/hooks/dashboard/useVisiblePlants';
 import { findNextPlant } from '@/lib/dashboard/explorerProgress';
@@ -7,14 +8,15 @@ import { findNextPlant } from '@/lib/dashboard/explorerProgress';
 export const useNextPlant = () => {
   const { state } = usePlantDashboard();
   const { visiblePlants, selectedPlant } = useVisiblePlants();
+  const { discoveredPlantIds } = useExplorerProgress();
 
   const nextPlant = findNextPlant(
     visiblePlants,
-    state.discoveredPlantIds,
+    discoveredPlantIds,
     selectedPlant ?? UAE_CENTRE,
     state.selectedPlantId,
   );
-  const isNextPlantNew = Boolean(nextPlant && !state.discoveredPlantIds.includes(nextPlant.id));
+  const isNextPlantNew = Boolean(nextPlant && !discoveredPlantIds.includes(nextPlant.id));
 
   return { nextPlant, isNextPlantNew };
 };

@@ -112,10 +112,10 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.82 0.13 195);
-  --chart-1: #c98500;
-  --chart-2: #3987e5;
-  --chart-3: #d55181;
-  --chart-4: #008300;
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: oklch(0.7 0.02 250);
   --chart-5: oklch(0.556 0 0);
   --map-ocean: oklch(0.17 0.015 250);
   --map-land: oklch(0.25 0.012 250);

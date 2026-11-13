@@ -1,11 +1,67 @@
-import { usePlantDashboard } from '@/hooks/dashboard/usePlantDashboard';
-import { usePlants } from '@/hooks/dashboard/usePlants';
-import { computeExplorerProgress } from '@/lib/dashboard/explorerProgress';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  getExplorerGetLeaderboardQueryKey,
+  getExplorerGetProgressQueryKey,
+  useExplorerDiscoverPlant,
+  useExplorerGetLeaderboard,
+  useExplorerGetProgress,
+  useExplorerInspectAsset,
+  useExplorerMarkGlobeOpened,
+  useExplorerReset,
+} from '@/api/generated/explorer/explorer';
+import { ExplorerRank } from '@/enums/dashboard/explorerRank';
+import { toAssetKey } from '@/lib/dashboard/explorerProgress';
+import type { ExplorerProgress } from '@/types/dashboard/explorerTypes';
 
-/** The explorer's experience, rank and achievements. */
-export const useExplorerProgress = () => {
-  const { state } = usePlantDashboard();
-  const { data: plants } = usePlants();
-
-  return { ...computeExplorerProgress(plants ?? [], state), isReady: Boolean(plants) };
+/** What is shown until the server has answered: nothing explored yet. */
+const EMPTY_PROGRESS: ExplorerProgress = {
+  discoveredPlantIds: [],
+  inspectedAssetKeys: [],
+  hasOpenedGlobe: false,
+  discoveredCount: 0,
+  totalCount: 0,
+  inspectedCount: 0,
+  assetCount: 0,
+  achievements: [],
+  unlockedCount: 0,
+  experience: 0,
+  rank: ExplorerRank.SCOUT,
+  level: 1,
+  nextRank: null,
+  experienceToNextRank: 0,
+  rankProgressPercent: 0,
 };
+
+/** The signed-in user's discoveries, experience, rank and achievements, as the API keeps them. */
+export const useExplorerProgress = () => {
+  const { data, isSuccess } = useExplorerGetProgress();
+
+  const progress = data ?? EMPTY_PROGRESS;
+  const isAssetInspected = (plantId: string, assetId: string) =>
+    progress.inspectedAssetKeys.includes(toAssetKey(plantId, assetId));
+
+  return { ...progress, isReady: isSuccess, isAssetInspected };
+};
+
+/**
+ * Records what the user explores. Every action answers with the new progress, which replaces
+ * the cached one, and the leaderboard is refreshed because experience may have changed.
+ */
+export const useExplorerActions = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = {
+    onSuccess: (progress: ExplorerProgress) => {
+      queryClient.setQueryData(getExplorerGetProgressQueryKey(), progress);
+      return queryClient.invalidateQueries({ queryKey: getExplorerGetLeaderboardQueryKey() });
+    },
+  };
+  const { mutate: discoverPlant } = useExplorerDiscoverPlant({ mutation });
+  const { mutate: inspectAsset } = useExplorerInspectAsset({ mutation });
+  const { mutate: markGlobeOpened } = useExplorerMarkGlobeOpened({ mutation });
+  const { mutate: resetProgress } = useExplorerReset({ mutation });
+
+  return { discoverPlant, inspectAsset, markGlobeOpened, resetProgress };
+};
+
+export const useLeaderboard = () => useExplorerGetLeaderboard();

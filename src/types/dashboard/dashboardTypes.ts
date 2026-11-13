@@ -3,13 +3,7 @@ import type { DashboardActionType } from '@/enums/dashboard/dashboardActionType'
 import type { MapFocus } from '@/enums/dashboard/mapFocus';
 import type { PlantSector } from '@/enums/dashboard/plantSector';
 
-/** The part of the state that is kept between visits. */
-export interface StoredProgress {
-  discoveredPlantIds: string[];
-  hasOpenedGlobe: boolean;
-}
-
-export interface DashboardState extends StoredProgress {
+export interface DashboardState {
   selectedPlantId: string | null;
   activeSectors: PlantSector[];
   focus: MapFocus;
@@ -26,9 +20,7 @@ export type DashboardAction =
   | { type: DashboardActionType.SET_ACTIVE_SECTORS; sectors: PlantSector[] }
   | { type: DashboardActionType.SET_FOCUS; focus: MapFocus.WORLD | MapFocus.UAE }
   | { type: DashboardActionType.REPLAY_INTRODUCTION }
-  | { type: DashboardActionType.SET_TOURING; isTouring: boolean }
-  | { type: DashboardActionType.MARK_GLOBE_OPENED }
-  | { type: DashboardActionType.RESET_PROGRESS };
+  | { type: DashboardActionType.SET_TOURING; isTouring: boolean };
 
 export interface DashboardContextValue {
   state: DashboardState;

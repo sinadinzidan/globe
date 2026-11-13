@@ -6,6 +6,8 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from './achievementId';
+export * from './achievementStatusDto';
 export * from './assetConnectionDto';
 export * from './assetCriticality';
 export * from './assetDetailDto';
@@ -23,9 +25,12 @@ export * from './createWorkOrderDto';
 export * from './currentUserDto';
 export * from './documentCategory';
 export * from './emirate';
+export * from './explorerProgressDto';
+export * from './explorerRank';
 export * from './groundPositionDto';
 export * from './inspectionResult';
 export * from './labelledValueDto';
+export * from './leaderboardEntryDto';
 export * from './loginDto';
 export * from './permission';
 export * from './plantDto';

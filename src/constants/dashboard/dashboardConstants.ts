@@ -1,6 +1,6 @@
 export const DASHBOARD_COPY = {
-  TITLE: 'UAE Industrial Plants',
-  SUBTITLE: 'Major industrial sites across the United Arab Emirates',
+  TITLE: 'ADNOC Asset Explorer',
+  SUBTITLE: 'ADNOC Gas and group sites across the UAE',
   JOURNEY_LABEL: 'Journey',
   JOURNEY_MAP: 'UAE map',
   VIEW_SWITCHER_LABEL: 'Map view',
