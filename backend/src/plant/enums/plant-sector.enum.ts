@@ -1,6 +1,6 @@
-/** The part of the business a plant belongs to. */
+/** The stream of the value chain a site belongs to. */
 export enum PlantSector {
-  GAS = 'GAS',
   UPSTREAM = 'UPSTREAM',
-  REFINING_AND_CHEMICALS = 'REFINING_AND_CHEMICALS',
+  MIDSTREAM = 'MIDSTREAM',
+  DOWNSTREAM = 'DOWNSTREAM',
 }

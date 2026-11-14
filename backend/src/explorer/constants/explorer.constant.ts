@@ -16,9 +16,9 @@ export const RANK_SHARES: readonly { rank: ExplorerRank; share: number }[] = [
 ];
 
 export const SECTOR_ACHIEVEMENT: Record<PlantSector, AchievementId> = {
-  [PlantSector.GAS]: AchievementId.GAS_COMPLETE,
   [PlantSector.UPSTREAM]: AchievementId.UPSTREAM_COMPLETE,
-  [PlantSector.REFINING_AND_CHEMICALS]: AchievementId.REFINING_AND_CHEMICALS_COMPLETE,
+  [PlantSector.MIDSTREAM]: AchievementId.MIDSTREAM_COMPLETE,
+  [PlantSector.DOWNSTREAM]: AchievementId.DOWNSTREAM_COMPLETE,
 };
 
 /** The stages gas passes through, from the field to the ship. Visiting one of each completes the mission. */

@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
 import { FOCUSED_ASSET_SEARCH_PARAMETER } from '@/constants/dashboard/plant/plantSceneConstants';
-import { ROUTE_PATH } from '@/constants/routeConstants';
-import { RoutePath } from '@/enums/routePath';
+import { DEFAULT_SIGNED_IN_PATH } from '@/constants/routeConstants';
 import { usePlantJourney } from '@/hooks/dashboard/usePlantJourney';
 import { buildPlantPath } from '@/lib/routePaths';
 
@@ -20,7 +19,7 @@ export const JourneyTrail = () => {
   const { plant, asset } = usePlantJourney();
 
   const steps = [
-    { label: DASHBOARD_COPY.JOURNEY_MAP, path: ROUTE_PATH[RoutePath.FLAT_MAP] },
+    { label: DASHBOARD_COPY.JOURNEY_MAP, path: DEFAULT_SIGNED_IN_PATH },
     ...(plant ? [{ label: plant.name, path: buildPlantPath(plant.id) }] : []),
     ...(plant && asset
       ? [

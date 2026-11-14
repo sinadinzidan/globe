@@ -5,8 +5,7 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { Button } from '@/components/ui/button';
 import { PLANT_COPY } from '@/constants/dashboard/plant/plantSceneConstants';
-import { ROUTE_PATH } from '@/constants/routeConstants';
-import { RoutePath } from '@/enums/routePath';
+import { DEFAULT_SIGNED_IN_PATH } from '@/constants/routeConstants';
 import { usePlantJourney } from '@/hooks/dashboard/usePlantJourney';
 
 export const PlantView = () => {
@@ -26,7 +25,7 @@ export const PlantView = () => {
           description={PLANT_COPY.NOT_FOUND_DESCRIPTION}
         />
         <Button asChild variant="outline">
-          <Link to={ROUTE_PATH[RoutePath.FLAT_MAP]}>{PLANT_COPY.BACK_TO_MAP}</Link>
+          <Link to={DEFAULT_SIGNED_IN_PATH}>{PLANT_COPY.BACK_TO_MAP}</Link>
         </Button>
       </div>
     );

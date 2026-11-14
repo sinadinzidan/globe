@@ -1,3 +1,4 @@
+import { CommandCenter } from '@/components/dashboard/CommandCenter';
 import { AchievementList } from '@/components/dashboard/AchievementList';
 import { ExplorerSummary } from '@/components/dashboard/ExplorerSummary';
 import { PlantBrowser } from '@/components/dashboard/PlantBrowser';
@@ -5,6 +6,7 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { COMMAND_CENTER_COPY } from '@/constants/dashboard/commandCenterConstants';
 import { DASHBOARD_COPY } from '@/constants/dashboard/dashboardConstants';
 import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { ExplorerTab } from '@/enums/dashboard/explorerTab';
@@ -37,9 +39,10 @@ export const ExplorerPanel = () => {
       {!isPending && !isError && allPlants.length > 0 && (
         <>
           <ExplorerSummary />
-          <Tabs defaultValue={ExplorerTab.PLANTS} className="gap-0 lg:min-h-0 lg:flex-1">
+          <Tabs defaultValue={ExplorerTab.OPERATIONS} className="gap-0 lg:min-h-0 lg:flex-1">
             <div className="px-4 pt-4">
               <TabsList className="w-full">
+                <TabsTrigger value={ExplorerTab.OPERATIONS}>{COMMAND_CENTER_COPY.TAB}</TabsTrigger>
                 <TabsTrigger value={ExplorerTab.PLANTS}>{EXPLORER_COPY.TAB_PLANTS}</TabsTrigger>
                 <TabsTrigger value={ExplorerTab.ACHIEVEMENTS}>
                   {EXPLORER_COPY.TAB_ACHIEVEMENTS}
@@ -49,6 +52,9 @@ export const ExplorerPanel = () => {
                 </TabsTrigger>
               </TabsList>
             </div>
+            <TabsContent value={ExplorerTab.OPERATIONS} className={TAB_CONTENT_CLASS_NAME}>
+              <CommandCenter />
+            </TabsContent>
             <TabsContent value={ExplorerTab.PLANTS} className={TAB_CONTENT_CLASS_NAME}>
               <PlantBrowser />
             </TabsContent>

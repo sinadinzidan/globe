@@ -52,7 +52,7 @@ const buildPlant = (id: string): Partial<Plant> => ({
   id,
   name: id,
   operator: 'Test operator',
-  sector: PlantSector.GAS,
+  sector: PlantSector.MIDSTREAM,
   emirate: Emirate.ABU_DHABI,
   longitude: 54,
   latitude: 24,

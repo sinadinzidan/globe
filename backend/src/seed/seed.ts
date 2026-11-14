@@ -6,9 +6,11 @@ import path from 'node:path';
 import argon2 from 'argon2';
 import { DataSource, In } from 'typeorm';
 import { Asset } from '../asset/entities/asset.entity.js';
+import { AssetStatus } from '../asset/enums/asset-status.enum.js';
 import { PASSWORD_MINIMUM_LENGTH } from '../common/constants/password.constant.js';
 import { buildDatabaseOptions } from '../common/database/database-options.js';
 import { Plant } from '../plant/entities/plant.entity.js';
+import { PlantStatus } from '../plant/enums/plant-status.enum.js';
 import { User } from '../user/entities/user.entity.js';
 import { WORK_ORDER_NUMBER_PREFIX } from '../work-order/constants/work-order.constant.js';
 import { WorkOrder } from '../work-order/entities/work-order.entity.js';
@@ -52,7 +54,9 @@ const seedPlant = async (dataSource: DataSource, plant: SeedPlant) => {
     })),
   });
   for (const sample of layout.assets) {
-    await seedAsset(dataSource, plant.id, sample);
+    // Nothing runs at a site that is still being built or planned.
+    const status = plant.status === PlantStatus.OPERATING ? sample.status : AssetStatus.STANDBY;
+    await seedAsset(dataSource, plant.id, { ...sample, status });
   }
 };
 

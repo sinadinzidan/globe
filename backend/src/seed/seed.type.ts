@@ -11,6 +11,7 @@ import type {
 } from '../asset/types/asset-detail.type.js';
 import type { Emirate } from '../plant/enums/emirate.enum.js';
 import type { PlantModel } from '../plant/enums/plant-model.enum.js';
+import type { PlantStatus } from '../plant/enums/plant-status.enum.js';
 import type { PlantSector } from '../plant/enums/plant-sector.enum.js';
 /** A position as the sample files spell it: x runs east, z runs south. */
 interface SamplePosition {
@@ -38,6 +39,7 @@ export interface SeedPlant {
   latitude: number;
   description: string;
   model: PlantModel;
+  status: PlantStatus;
 }
 
 interface SeedWorkOrder {

@@ -8,6 +8,7 @@
 import type { Emirate } from './emirate';
 import type { PlantModel } from './plantModel';
 import type { PlantSector } from './plantSector';
+import type { PlantStatus } from './plantStatus';
 
 export interface PlantDto {
   /** A readable identifier, used in URLs. */
@@ -20,4 +21,5 @@ export interface PlantDto {
   latitude: number;
   description: string;
   model: PlantModel;
+  status: PlantStatus;
 }

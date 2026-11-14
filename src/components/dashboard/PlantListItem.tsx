@@ -1,6 +1,10 @@
 import { CircleCheck } from 'lucide-react';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
-import { SECTOR_PRESENTATION } from '@/constants/dashboard/plantConstants';
+import {
+  PLANT_STATUS_PRESENTATION,
+  SECTOR_PRESENTATION,
+} from '@/constants/dashboard/plantConstants';
+import { PlantStatus } from '@/enums/dashboard/plantStatus';
 import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import { DashboardActionType } from '@/enums/dashboard/dashboardActionType';
 import { useExplorerProgress } from '@/hooks/dashboard/useExplorerProgress';
@@ -18,6 +22,7 @@ export const PlantListItem = ({ plant }: PlantListItemProperties) => {
 
   const isSelected = state.selectedPlantId === plant.id;
   const isDiscovered = discoveredPlantIds.includes(plant.id);
+  const isOperating = plant.status === PlantStatus.OPERATING;
 
   const handleSelect = () => {
     dispatch(
@@ -43,6 +48,7 @@ export const PlantListItem = ({ plant }: PlantListItemProperties) => {
           <span className="truncate text-sm font-medium">{plant.name}</span>
           <span className="truncate text-xs text-muted-foreground">
             {SECTOR_PRESENTATION[plant.sector].label}
+            {!isOperating && ` · ${PLANT_STATUS_PRESENTATION[plant.status].label}`}
           </span>
         </span>
         {isDiscovered && (

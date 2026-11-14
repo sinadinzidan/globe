@@ -24,6 +24,7 @@ import {
 import { buildDatabaseOptions } from './common/database/database-options.js';
 import { CsrfHeaderGuard } from './common/guards/csrf-header.guard.js';
 import { ExplorerModule } from './explorer/explorer.module.js';
+import { OperationModule } from './operation/operation.module.js';
 import { PlantModule } from './plant/plant.module.js';
 import { RoleModule } from './role/role.module.js';
 import { UserModule } from './user/user.module.js';
@@ -86,6 +87,7 @@ const isAuthRateLimited = (context: ExecutionContext) =>
     AssetModule,
     WorkOrderModule,
     ExplorerModule,
+    OperationModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

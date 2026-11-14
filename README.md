@@ -1,8 +1,8 @@
-# Globe · ADNOC Asset Explorer
+# Globe · ADNOC Command Center
 
-A gamified explorer of ADNOC group sites, centred on ADNOC Gas. It opens on the world, flies to the
-UAE, and leads from the map into each plant in 3D and down to its assets, with access controlled
-by role.
+A gamified command center for ADNOC operations, centred on ADNOC Gas. It opens on the globe, flies
+to the UAE, and shows upstream, midstream and downstream operations at a glance. From there it
+leads into each site in 3D and down to its assets, with access controlled by role.
 
 > **The content is illustrative.** The sites are real, publicly known ADNOC facilities, but their
 > positions are approximate, and the 3D layouts, assets, readings, work orders, inspections and
@@ -11,17 +11,26 @@ by role.
 
 ## The portfolio
 
-| Company        | Sites                                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------------------ |
-| ADNOC Gas      | Habshan complex, Habshan 5, Bab, Asab and Bu Hasa gas plants, Ruwais NGL fractionation, Das Island LNG |
-| ADNOC Sour Gas | Shah gas plant                                                                                         |
-| ADNOC Onshore  | Bu Hasa field, Jebel Dhanna terminal, Fujairah oil terminal                                            |
-| ADNOC Offshore | Zirku Island, Upper Zakum                                                                              |
-| ADNOC Refining | Ruwais refinery                                                                                        |
-| Borouge        | Ruwais petrochemical complex                                                                           |
-| Fertiglobe     | Ruwais fertilizer plant                                                                                |
+Forty sites, grouped by stream of the value chain. The list was compiled from public sources in
+November 2026; they are listed with their caveats in
+[`backend/seed-data/SOURCES.md`](backend/seed-data/SOURCES.md).
 
-Each plant is shown with one of five representative layouts. The three gas ones follow the gas
+| Stream     | Sites                                                                                                                                                                                                                                                                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Upstream   | ADNOC Onshore fields (Bab, Bu Hasa, Asab, Sahil, Qusahwira, Al Dabb'iya, Rumaitha), ADNOC Offshore fields (Upper Zakum, Lower Zakum, Umm Shaif, Nasr, Umm Lulu, SARB), the Shah sour gas plant, the Belbazem block, and the Hail and Ghasha development                                                                       |
+| Midstream  | ADNOC Gas (Habshan complex, Habshan 5, Bab, Asab and Buhasa gas plants, Ruwais NGL fractionation, Das Island LNG, Taweelah compression, Ruwais sulphur terminal, and the MERAM, Bab Gas Cap and Ruwais LNG projects), the export terminals (Jebel Dhanna, Fujairah, Zirku Island, Das Island) and the ADNOC L&S Mussafah base |
+| Downstream | Ruwais refinery, Borouge 1-3 and Borouge 4, Fertil, the TA'ZIZ chemicals zone, ADNOC Industrial Gases and the Al Reyadah carbon capture facility                                                                                                                                                                              |
+
+Each site is operating, under construction or planned. Pipeline networks and ADNOC Distribution's
+service stations are not plotted, because they are not single sites.
+
+The **Operations** tab beside the globe is the command center. For each stream it shows the sites,
+the assets and how many are running, the assets in maintenance and the open work orders, counted
+over the sites you can reach. Selecting a stream shows only its sites on the map. Below it, a list
+of assets that are not running links straight to each asset's page.
+
+Each site is shown with one of six representative layouts (gas processing, NGL fractionation, LNG,
+process plant, oil production facility and export terminal). The three gas ones follow the gas
 value chain:
 
 - **Gas processing** (Habshan and the field gas plants): slug catcher, inlet separator, amine
@@ -38,7 +47,7 @@ The dashboard reads as a story that goes one level deeper at each step:
 
 | Step     | Route                              | What it shows                                          |
 | -------- | ---------------------------------- | ------------------------------------------------------ |
-| 1. Map   | `/map`, `/globe`                   | The world, then the UAE and its plants                 |
+| 1. Map   | `/globe`, `/map`                   | The command center: the globe, the UAE and its sites   |
 | 2. Plant | `/plants/:plantId`                 | The plant in 3D, with its assets labelled on the model |
 | 3. Asset | `/plants/:plantId/assets/:assetId` | One asset: its model, key figures and six tabs         |
 
@@ -193,14 +202,14 @@ keeps it in PostgreSQL. The sample content the database is seeded with is in `ba
 
 | File                     | Content                                                              |
 | ------------------------ | -------------------------------------------------------------------- |
-| `plants.json`            | The plants: name, operator, sector, emirate, longitude and latitude  |
+| `plants.json`            | The sites: name, operator, stream, status, emirate and position      |
 | `world-countries.json`   | World country outlines (Natural Earth 1:50m, TopoJSON)               |
 | `uae-region-detail.json` | The UAE and its neighbours at 1:10m, and the borders of the emirates |
 
 The plant locations are approximate positions of well-known public sites, and are meant to be
 replaced with real asset data.
 
-Sectors and emirates are enums (`src/enums/dashboard/`). Their labels, icons and colours are in
+Streams and emirates are enums (`src/enums/dashboard/`). Their labels, icons and colours are in
 `src/constants/dashboard/plantConstants.ts`.
 
 ## Animating and styling the map

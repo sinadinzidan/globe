@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import type { Plant } from '../entities/plant.entity.js';
 import { Emirate } from '../enums/emirate.enum.js';
 import { PlantModel } from '../enums/plant-model.enum.js';
+import { PlantStatus } from '../enums/plant-status.enum.js';
 import { PlantSector } from '../enums/plant-sector.enum.js';
 
 export class PlantDto {
@@ -32,6 +33,9 @@ export class PlantDto {
   @ApiProperty({ enum: PlantModel, enumName: 'PlantModel' })
   model: PlantModel;
 
+  @ApiProperty({ enum: PlantStatus, enumName: 'PlantStatus' })
+  status: PlantStatus;
+
   static from(plant: Plant): PlantDto {
     return {
       id: plant.id,
@@ -43,6 +47,7 @@ export class PlantDto {
       latitude: plant.latitude,
       description: plant.description,
       model: plant.model,
+      status: plant.status,
     };
   }
 }

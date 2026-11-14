@@ -1368,6 +1368,42 @@
           "explorer"
         ]
       }
+    },
+    "/api/operations/summary": {
+      "get": {
+        "operationId": "operationGetSummary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationSummaryDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in, or the session has ended."
+          },
+          "403": {
+            "description": "Requires the permission PLANT_READ, or the request header is missing."
+          },
+          "429": {
+            "description": "Too many requests. Try again later."
+          }
+        },
+        "security": [
+          {
+            "access-token-cookie": []
+          }
+        ],
+        "summary": "The state of operations by stream, across the sites you can reach. Requires PLANT_READ. Work order counts need WORK_ORDER_READ.",
+        "tags": [
+          "operations"
+        ]
+      }
     }
   },
   "info": {
@@ -1747,9 +1783,9 @@
       "PlantSector": {
         "type": "string",
         "enum": [
-          "GAS",
           "UPSTREAM",
-          "REFINING_AND_CHEMICALS"
+          "MIDSTREAM",
+          "DOWNSTREAM"
         ]
       },
       "Emirate": {
@@ -1771,7 +1807,16 @@
           "NGL_FRACTIONATION_PLANT",
           "LNG_PLANT",
           "PROCESS_PLANT",
-          "OIL_PRODUCTION_FACILITY"
+          "OIL_PRODUCTION_FACILITY",
+          "EXPORT_TERMINAL"
+        ]
+      },
+      "PlantStatus": {
+        "type": "string",
+        "enum": [
+          "OPERATING",
+          "UNDER_CONSTRUCTION",
+          "PLANNED"
         ]
       },
       "PlantDto": {
@@ -1821,6 +1866,13 @@
                 "$ref": "#/components/schemas/PlantModel"
               }
             ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlantStatus"
+              }
+            ]
           }
         },
         "required": [
@@ -1832,7 +1884,8 @@
           "longitude",
           "latitude",
           "description",
-          "model"
+          "model",
+          "status"
         ]
       },
       "GroundPositionDto": {
@@ -2431,9 +2484,9 @@
         "type": "string",
         "enum": [
           "FIRST_DISCOVERY",
-          "GAS_COMPLETE",
           "UPSTREAM_COMPLETE",
-          "REFINING_AND_CHEMICALS_COMPLETE",
+          "MIDSTREAM_COMPLETE",
+          "DOWNSTREAM_COMPLETE",
           "EVERY_COMPANY",
           "GAS_VALUE_CHAIN",
           "FIRST_INSPECTION",
@@ -2594,6 +2647,128 @@
           "fullName",
           "unlockedCount",
           "isCurrentUser"
+        ]
+      },
+      "StreamSummaryDto": {
+        "type": "object",
+        "properties": {
+          "sector": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlantSector"
+              }
+            ]
+          },
+          "plantCount": {
+            "type": "number",
+            "description": "Sites in this stream."
+          },
+          "operatingPlantCount": {
+            "type": "number",
+            "description": "Sites that are operating, as opposed to being built or planned."
+          },
+          "assetCount": {
+            "type": "number"
+          },
+          "runningAssetCount": {
+            "type": "number"
+          },
+          "standbyAssetCount": {
+            "type": "number"
+          },
+          "maintenanceAssetCount": {
+            "type": "number"
+          },
+          "openWorkOrderCount": {
+            "type": "number",
+            "description": "Work orders not yet completed. Zero without the permission to see work orders."
+          }
+        },
+        "required": [
+          "sector",
+          "plantCount",
+          "operatingPlantCount",
+          "assetCount",
+          "runningAssetCount",
+          "standbyAssetCount",
+          "maintenanceAssetCount",
+          "openWorkOrderCount"
+        ]
+      },
+      "AttentionItemDto": {
+        "type": "object",
+        "properties": {
+          "plantId": {
+            "type": "string",
+            "example": "habshan-gas-complex"
+          },
+          "plantName": {
+            "type": "string",
+            "example": "Habshan Gas Processing Complex"
+          },
+          "sector": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlantSector"
+              }
+            ]
+          },
+          "assetId": {
+            "type": "string",
+            "example": "sru-601"
+          },
+          "tag": {
+            "type": "string",
+            "example": "SRU-601"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sulphur recovery unit"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetStatus"
+              }
+            ]
+          }
+        },
+        "required": [
+          "plantId",
+          "plantName",
+          "sector",
+          "assetId",
+          "tag",
+          "name",
+          "status"
+        ]
+      },
+      "OperationSummaryDto": {
+        "type": "object",
+        "properties": {
+          "streams": {
+            "description": "One entry per stream, upstream first.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StreamSummaryDto"
+            }
+          },
+          "attention": {
+            "description": "Assets under maintenance, most critical first.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttentionItemDto"
+            }
+          },
+          "hasWorkOrderCounts": {
+            "type": "boolean",
+            "description": "Whether work order counts are included for this user."
+          }
+        },
+        "required": [
+          "streams",
+          "attention",
+          "hasWorkOrderCounts"
         ]
       }
     }

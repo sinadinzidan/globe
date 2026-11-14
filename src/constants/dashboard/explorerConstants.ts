@@ -50,19 +50,19 @@ export const ACHIEVEMENT_PRESENTATION: Record<AchievementId, AchievementPresenta
     description: 'Discover your first plant.',
     icon: Flag,
   },
-  [AchievementId.GAS_COMPLETE]: {
-    title: 'Gas master',
-    description: 'Discover every gas plant.',
-    icon: Flame,
-  },
   [AchievementId.UPSTREAM_COMPLETE]: {
-    title: 'Wellhead to terminal',
+    title: 'At the wellhead',
     description: 'Discover every upstream site.',
     icon: Drill,
   },
-  [AchievementId.REFINING_AND_CHEMICALS_COMPLETE]: {
+  [AchievementId.MIDSTREAM_COMPLETE]: {
+    title: 'Midstream master',
+    description: 'Discover every midstream site.',
+    icon: Flame,
+  },
+  [AchievementId.DOWNSTREAM_COMPLETE]: {
     title: 'Downstream specialist',
-    description: 'Discover every refining and chemicals plant.',
+    description: 'Discover every downstream site.',
     icon: Factory,
   },
   [AchievementId.EVERY_COMPANY]: {

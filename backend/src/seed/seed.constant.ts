@@ -35,7 +35,7 @@ export const SEED_USERS: readonly SeedUser[] = [
     email: 'plant.manager@globe.example',
     fullName: 'Majid Manager',
     role: Role.PLANT_MANAGER,
-    plantIds: ['habshan-gas-complex', 'habshan-5', 'bab-gas-plant'],
+    plantIds: ['habshan-gas-complex', 'habshan-5-gas-plant', 'bab-gas-plant'],
   },
   {
     email: 'reliability.engineer@globe.example',
@@ -53,7 +53,7 @@ export const SEED_USERS: readonly SeedUser[] = [
     email: 'inspector@globe.example',
     fullName: 'Ibrahim Inspector',
     role: Role.INSPECTOR,
-    plantIds: ['das-island-lng', 'ruwais-ngl'],
+    plantIds: ['das-island-lng-plant', 'ruwais-ngl-fractionation-plant'],
   },
   {
     email: 'operator@globe.example',
@@ -65,6 +65,6 @@ export const SEED_USERS: readonly SeedUser[] = [
     email: 'viewer@globe.example',
     fullName: 'Vera Viewer',
     role: Role.VIEWER,
-    plantIds: ['ruwais-refinery', 'borouge-ruwais'],
+    plantIds: ['ruwais-refinery', 'borouge-ruwais-complex'],
   },
 ];

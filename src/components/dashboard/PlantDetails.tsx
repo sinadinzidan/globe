@@ -1,6 +1,7 @@
 import { ArrowRight, CircleCheck, X } from 'lucide-react';
 import { Link } from 'react-router';
 import { SectorBadge } from '@/components/dashboard/SectorBadge';
+import { StatusBadge } from '@/components/dashboard/StatusBadge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,6 +18,7 @@ import { EXPLORER_COPY } from '@/constants/dashboard/explorerConstants';
 import {
   COORDINATE_FRACTION_DIGITS,
   EMIRATE_LABEL,
+  PLANT_STATUS_PRESENTATION,
   SECTOR_PRESENTATION,
 } from '@/constants/dashboard/plantConstants';
 import { PLANT_COPY } from '@/constants/dashboard/plant/plantSceneConstants';
@@ -39,6 +41,7 @@ export const PlantDetails = () => {
   }
 
   const location = `${selectedPlant.latitude.toFixed(COORDINATE_FRACTION_DIGITS)}${DASHBOARD_COPY.LATITUDE_SUFFIX}, ${selectedPlant.longitude.toFixed(COORDINATE_FRACTION_DIGITS)}${DASHBOARD_COPY.LONGITUDE_SUFFIX}`;
+  const status = PLANT_STATUS_PRESENTATION[selectedPlant.status];
   const details = [
     { label: DASHBOARD_COPY.DETAIL_OPERATOR, value: selectedPlant.operator },
     { label: DASHBOARD_COPY.DETAIL_EMIRATE, value: EMIRATE_LABEL[selectedPlant.emirate] },
@@ -69,10 +72,13 @@ export const PlantDetails = () => {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <Badge variant="outline" className="self-start border-primary/40 text-primary">
-          <CircleCheck aria-hidden="true" />
-          {EXPLORER_COPY.DISCOVERED_BADGE}
-        </Badge>
+        <div className="flex flex-wrap gap-2">
+          <StatusBadge label={status.label} icon={status.icon} tone={status.tone} />
+          <Badge variant="outline" className="border-primary/40 text-primary">
+            <CircleCheck aria-hidden="true" />
+            {EXPLORER_COPY.DISCOVERED_BADGE}
+          </Badge>
+        </div>
         <p className="text-sm text-muted-foreground">{selectedPlant.description}</p>
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
           {details.map((detail) => (

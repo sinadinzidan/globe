@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { Emirate } from '../enums/emirate.enum.js';
 import { PlantModel } from '../enums/plant-model.enum.js';
+import { PlantStatus } from '../enums/plant-status.enum.js';
 import { PlantSector } from '../enums/plant-sector.enum.js';
 import type { SceneryBuilding } from '../types/scenery-building.type.js';
 
@@ -35,6 +36,9 @@ export class Plant {
 
   @Column({ type: 'enum', enum: PlantModel })
   model: PlantModel;
+
+  @Column({ type: 'enum', enum: PlantStatus, default: PlantStatus.OPERATING })
+  status: PlantStatus;
 
   /** Buildings that fill out the 3D model. Their shape is free-form drawing data. */
   @Column({ type: 'jsonb', default: () => "'[]'" })

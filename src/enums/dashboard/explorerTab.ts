@@ -1,4 +1,5 @@
 export enum ExplorerTab {
+  OPERATIONS = 'OPERATIONS',
   PLANTS = 'PLANTS',
   ACHIEVEMENTS = 'ACHIEVEMENTS',
 }
